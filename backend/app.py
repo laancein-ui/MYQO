@@ -22,13 +22,26 @@ FRONTEND_URL = os.getenv("FRONTEND_URL", "*")
 CORS(app, origins=[FRONTEND_URL] if FRONTEND_URL != "*" else ["*"])
 
 # ─── Pusher Client ───────────────────────────────────────────
-pusher_client = pusher.Pusher(
-    app_id=os.getenv("PUSHER_APP_ID"),
-    key=os.getenv("PUSHER_KEY"),
-    secret=os.getenv("PUSHER_SECRET"),
-    cluster=os.getenv("PUSHER_CLUSTER", "ap2"),
-    ssl=True
-)
+PUSHER_APP_ID = os.getenv("PUSHER_APP_ID") or "2205384"
+PUSHER_KEY = os.getenv("PUSHER_KEY") or "6022aa162db803a7b9e7"
+PUSHER_SECRET = os.getenv("PUSHER_SECRET") or "80c4b05254a0f184cb7a"
+PUSHER_CLUSTER = os.getenv("PUSHER_CLUSTER") or "ap2"
+
+pusher_client = None
+try:
+    if PUSHER_APP_ID and PUSHER_KEY and PUSHER_SECRET:
+        pusher_client = pusher.Pusher(
+            app_id=str(PUSHER_APP_ID).strip(),
+            key=str(PUSHER_KEY).strip(),
+            secret=str(PUSHER_SECRET).strip(),
+            cluster=str(PUSHER_CLUSTER).strip(),
+            ssl=True
+        )
+        print("✅ Pusher Channels connected successfully")
+    else:
+        print("⚠️ Pusher credentials incomplete, skipping init")
+except Exception as e:
+    print(f"⚠️ Pusher init warning: {e}")
 
 # ─── Supabase Client (optional — gracefully skip if not configured) ─
 supabase = None
@@ -105,22 +118,26 @@ def create_order():
 
         # ── Step 2: Trigger Pusher → Kitchen gets instant notification ──
         # This is the MAGIC LINE — delivers to kitchen screen in < 20ms!
-        pusher_response = pusher_client.trigger(
-            "orders",           # Channel name
-            "new-order",        # Event name
-            {
-                "orderId": order["order_id"],
-                "clientId": order["client_id"],
-                "restaurantId": order["restaurant_id"],
-                "tableNo": order["table_no"],
-                "customerPhone": order["customer_phone"],
-                "itemsSummary": order["items_summary"],
-                "totalPrice": order["total_price"],
-                "orderTime": order["order_time"],
-                "status": order["status"]
-            }
-        )
-        print(f"⚡ Pusher triggered for {order['order_id']}")
+        if pusher_client:
+            try:
+                pusher_client.trigger(
+                    "orders",           # Channel name
+                    "new-order",        # Event name
+                    {
+                        "orderId": order["order_id"],
+                        "clientId": order["client_id"],
+                        "restaurantId": order["restaurant_id"],
+                        "tableNo": order["table_no"],
+                        "customerPhone": order["customer_phone"],
+                        "itemsSummary": order["items_summary"],
+                        "totalPrice": order["total_price"],
+                        "orderTime": order["order_time"],
+                        "status": order["status"]
+                    }
+                )
+                print(f"⚡ Pusher triggered for {order['order_id']}")
+            except Exception as pe:
+                print(f"⚠️ Pusher trigger error: {pe}")
 
         return jsonify({
             "success": True,
@@ -154,10 +171,14 @@ def update_order_status(order_id):
                 print(f"⚠️  Supabase update error: {db_err}")
 
         # Broadcast status change to all screens
-        pusher_client.trigger("orders", "order-status-update", {
-            "orderId": order_id,
-            "status": new_status
-        })
+        if pusher_client:
+            try:
+                pusher_client.trigger("orders", "order-status-update", {
+                    "orderId": order_id,
+                    "status": new_status
+                })
+            except Exception as pe:
+                print(f"⚠️ Pusher status trigger error: {pe}")
 
         return jsonify({"success": True, "orderId": order_id, "status": new_status})
 
