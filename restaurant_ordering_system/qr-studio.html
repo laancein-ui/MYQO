@@ -373,10 +373,15 @@
                 <!-- 0. Multi-Tenant: Restaurant / Client Selection -->
                 <div class="config-section" style="background:rgba(212,175,55,0.06); border:1px solid rgba(212,175,55,0.3); padding:1rem 1.2rem; border-radius:12px; margin-bottom:1.5rem;">
                     <h4 style="color:var(--accent-gold); display:flex; align-items:center; gap:0.5rem;">🏪 Select Restaurant / Client</h4>
-                    <p class="hint">Choose which registered restaurant this table QR is being generated for.</p>
+                    <p class="hint">Choose a registered client OR enter a custom restaurant name below.</p>
                     <select id="clientPickerSelect" class="ctrl-input" style="background:#161622; color:#fff; font-weight:700; font-size:0.95rem; margin-top:0.6rem;" onchange="onClientSelectChange(this.value)">
-                        <option value="">Default: Royal Spice Fine Dining</option>
+                        <option value="">-- Choose Registered Restaurant --</option>
                     </select>
+
+                    <div style="margin-top:0.8rem;">
+                        <label style="font-size:0.75rem; color:#aaa; font-weight:700;">✏️ Restaurant Brand Name (Shown on Phone when scanned):</label>
+                        <input type="text" id="restaurantNameInput" class="ctrl-input" placeholder="e.g. Al Reem Mandi, Paris Bistro" style="margin-top:0.3rem;" oninput="onCustomRestaurantNameInput(this.value)" />
+                    </div>
                 </div>
 
                 <!-- 1. Table Selection & Custom Area Creation -->
@@ -518,8 +523,10 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             initClientPicker();
-            const rName = (restaurant.companyName || restaurant.name || "Royal Spice Fine Dining").toUpperCase();
-            document.getElementById('bistroName').textContent = rName;
+            const rName = (restaurant.companyName || restaurant.name || "La Lune French Bistro");
+            document.getElementById('bistroName').textContent = rName.toUpperCase();
+            const nameInput = document.getElementById('restaurantNameInput');
+            if (nameInput) nameInput.value = rName;
             document.getElementById('waNumberText').textContent = restaurant.whatsapp || "+91 98470 54321";
             selectTable('Table 01', 1);
         });
@@ -533,7 +540,7 @@
             const clientParam = params.get('client');
             if (clientParam) selectedClientId = clientParam;
 
-            select.innerHTML = '<option value="">Default: Royal Spice Fine Dining</option>' +
+            select.innerHTML = '<option value="">-- Choose Registered Restaurant --</option>' +
                 users.map(u => `<option value="${u.id}" ${u.id === selectedClientId ? 'selected' : ''}>${u.id} — ${u.businessName || u.name} (${u.phone})</option>`).join('');
 
             if (selectedClientId) {
@@ -549,15 +556,27 @@
             if (client) {
                 applyClientToStand(client);
             } else {
-                document.getElementById('bistroName').textContent = (restaurant.companyName || restaurant.name || "Royal Spice Fine Dining").toUpperCase();
+                const defName = (restaurant.companyName || restaurant.name || "La Lune French Bistro");
+                document.getElementById('bistroName').textContent = defName.toUpperCase();
+                const nameInput = document.getElementById('restaurantNameInput');
+                if (nameInput) nameInput.value = defName;
                 document.getElementById('waNumberText').textContent = restaurant.whatsapp || "+91 98470 54321";
             }
             selectTable(currentLabel, currentTableNum);
         }
 
+        function onCustomRestaurantNameInput(val) {
+            const trimmed = val.trim();
+            const displayName = (trimmed || "La Lune French Bistro").toUpperCase();
+            document.getElementById('bistroName').textContent = displayName;
+            selectTable(currentLabel, currentTableNum);
+        }
+
         function applyClientToStand(c) {
-            const name = (c.businessName || c.name).toUpperCase();
-            document.getElementById('bistroName').textContent = name;
+            const name = (c.businessName || c.name);
+            document.getElementById('bistroName').textContent = name.toUpperCase();
+            const nameInput = document.getElementById('restaurantNameInput');
+            if (nameInput) nameInput.value = name;
             document.getElementById('standCrest').textContent = selectedEmoji + " " + (c.businessName ? c.businessName.split(' ')[0].toUpperCase() : 'LAANCE');
             document.getElementById('waNumberText').textContent = c.phone || restaurant.whatsapp;
         }
@@ -579,8 +598,10 @@
             const origin = window.location.origin;
             const pathname = window.location.pathname;
             const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
-            const clientQuery = selectedClientId ? `&client=${selectedClientId}` : '';
-            const targetUrl = `${origin}${basePath}customer-dine.html?table=${currentTableNum}${clientQuery}`;
+            const currentBistroName = document.getElementById('bistroName').textContent.trim();
+            const restQuery = currentBistroName ? `&rest=${encodeURIComponent(currentBistroName)}` : '';
+            const clientQuery = selectedClientId ? `&client=${encodeURIComponent(selectedClientId)}` : '';
+            const targetUrl = `${origin}${basePath}customer-dine.html?table=${currentTableNum}${restQuery}${clientQuery}`;
             document.getElementById('targetUrlBox').value = targetUrl;
 
             generateCompositeQR(targetUrl);

@@ -476,7 +476,13 @@
             const t = params.get('table');
             if (t) tableNo = parseInt(t, 10);
 
-            // Multi-Tenant: Load client info from URL param
+            // 1. Direct Restaurant Name from QR Code URL (?rest=... or ?name=...)
+            const directRestName = params.get('rest') || params.get('name');
+            if (directRestName) {
+                applyClientBranding({ businessName: directRestName });
+            }
+
+            // 2. Multi-Tenant: Load client info from URL param (?client=...)
             clientId = params.get('client');
             if (clientId) {
                 // 1. First check local storage
