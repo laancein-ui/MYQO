@@ -636,8 +636,10 @@
         // Add client links in success screen
         const successBox = document.getElementById('regSuccess');
         const origin = window.location.origin || 'http://localhost:8000';
-        const clientMenuUrl = `${origin}/customer-dine.html?client=${userId}&table=1`;
-        const clientKitchenUrl = `${origin}/live-operations.html?client=${userId}`;
+        const pathname = window.location.pathname;
+        const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+        const clientMenuUrl = `${origin}${basePath}customer-dine.html?client=${userId}&table=1`;
+        const clientKitchenUrl = `${origin}${basePath}live-operations.html?client=${userId}`;
 
         const linksContainer = document.getElementById('clientLinksBox');
         if (!linksContainer) {

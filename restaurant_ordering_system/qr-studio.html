@@ -528,7 +528,9 @@
             document.getElementById('tableTitle').textContent = label.toUpperCase();
 
             const origin = window.location.origin;
-            const targetUrl = `${origin}/customer-dine.html?table=${currentTableNum}`;
+            const pathname = window.location.pathname;
+            const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+            const targetUrl = `${origin}${basePath}customer-dine.html?table=${currentTableNum}`;
             document.getElementById('targetUrlBox').value = targetUrl;
 
             generateCompositeQR(targetUrl);
