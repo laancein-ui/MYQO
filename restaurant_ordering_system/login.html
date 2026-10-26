@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LAANCE SaaS | Sign In &amp; Restaurant Registration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-black: #000000;
+            --bg-card: #121217;
+            --bg-card-alt: #171720;
+            --text-white: #ffffff;
+            --text-muted: #9e9ea7;
+            --accent-gold: #d4af37;
+            --accent-gold-bright: #f3ce49;
+            --accent-orange: #ff7a18;
+            --accent-green: #10b981;
+            --border-dark: rgba(255, 255, 255, 0.12);
+            --font-heading: 'Cinzel', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --radius-pill: 9999px;
+            --radius-card: 20px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar */
+        .top-navbar {
+            background: rgba(10, 10, 14, 0.95);
+            border-bottom: 1px solid var(--border-dark);
+            padding: 1rem 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: #ffffff;
+        }
+        .nav-brand .crest { font-size: 1.4rem; }
+        .nav-brand .brand { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 800; color: var(--accent-gold); }
+        .nav-brand .sub { font-size: 0.65rem; color: #888; letter-spacing: 0.2em; }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .btn-nav-outline {
+            background: transparent;
+            border: 1px solid var(--border-dark);
+            color: var(--text-muted);
+            padding: 0.45rem 1.2rem;
+            border-radius: var(--radius-pill);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-nav-outline:hover { color: #fff; border-color: #fff; }
+
+        /* Main Container */
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem 1.5rem;
+        }
+
+        .auth-card {
+            max-width: 1100px;
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-card);
+            display: grid;
+            grid-template-columns: 1fr 1.35fr;
+            overflow: hidden;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.85);
+        }
+
+        /* Left Branding Panel */
+        .info-side {
+            background: #0d0d12;
+            padding: 3.5rem 3rem;
+            border-right: 1px solid var(--border-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .info-side .crest-lg { font-size: 2.5rem; margin-bottom: 0.8rem; }
+        .info-side h2 { font-family: var(--font-heading); font-size: 1.7rem; color: var(--accent-gold); margin-bottom: 0.8rem; line-height: 1.25; }
+        .info-side p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.65; margin-bottom: 2rem; }
+
+        .perks-list { display: flex; flex-direction: column; gap: 1.1rem; margin-bottom: 2rem; }
+        .perk { display: flex; gap: 0.8rem; align-items: flex-start; }
+        .perk .chk { color: var(--accent-green); font-weight: 800; font-size: 1.1rem; line-height: 1.2; }
+        .perk strong { color: #fff; font-size: 0.92rem; display: block; margin-bottom: 0.15rem; }
+        .perk p { color: #888; font-size: 0.82rem; margin: 0; line-height: 1.4; }
+
+        .security-badge {
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+        }
+        .security-badge .icon { font-size: 1.4rem; color: var(--accent-gold); }
+        .security-badge .text { font-size: 0.8rem; color: #b8b8c2; line-height: 1.4; }
+        .security-badge strong { color: var(--accent-gold); }
+
+        /* Right Form Panel */
+        .form-side {
+            padding: 3rem 2.8rem;
+            background: #141419;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        /* Mode Switcher Tabs */
+        .tab-switcher {
+            display: flex;
+            background: #0d0d12;
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-pill);
+            padding: 0.3rem;
+            margin-bottom: 2rem;
+            gap: 0.3rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-pill);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold));
+            color: #000;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+        }
+
+        .step-tag { font-size: 0.72rem; letter-spacing: 0.2em; color: var(--accent-gold); font-weight: 800; display: block; margin-bottom: 0.4rem; text-transform: uppercase; }
+        .form-side h3 { font-size: 1.7rem; color: #fff; margin-bottom: 0.4rem; font-weight: 800; }
+        .form-subtitle { color: #8d95a2; font-size: 0.88rem; margin-bottom: 1.8rem; line-height: 1.5; }
+
+        /* Alerts */
+        .alert-box {
+            padding: 0.85rem 1.1rem;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            margin-bottom: 1.4rem;
+            display: none;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        .alert-success {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
+        }
+        .alert-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+        }
+
+        /* Form Controls */
+        .form-group { margin-bottom: 1.15rem; position: relative; }
+        .form-group label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #d1d5db;
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.02em;
+        }
+        .form-group label .hint { font-size: 0.75rem; color: var(--accent-gold); font-weight: 600; }
+
+        .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-wrap .prefix-icon {
+            position: absolute;
+            left: 1rem;
+            color: #6b7280;
+            font-size: 0.95rem;
+            pointer-events: none;
+        }
+        .input-wrap input, .form-group textarea, .form-group select {
+            width: 100%;
+            background: #1b1b24;
+            border: 1px solid var(--border-dark);
+            border-radius: 10px;
+            padding: 0.8rem 1rem 0.8rem 2.6rem;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .form-group textarea {
+            padding: 0.8rem 1rem;
+            resize: vertical;
+            min-height: 70px;
+        }
+        .form-group select {
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+        }
+        .input-wrap input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--accent-gold);
+            background: #21212c;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+        }
+
+        .btn-toggle-eye {
+            position: absolute;
+            right: 0.8rem;
+            background: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.95rem;
+            padding: 0.3rem;
+        }
+        .btn-toggle-eye:hover { color: #fff; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        /* Owner Performance Password Callout */
+        .special-callout-box {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(255, 122, 24, 0.06));
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 1.1rem;
+            margin-bottom: 1.3rem;
+        }
+        .special-callout-box .head {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-gold);
+            font-weight: 800;
+            font-size: 0.85rem;
+            margin-bottom: 0.35rem;
+        }
+        .special-callout-box p {
+            color: #9ca3af;
+            font-size: 0.78rem;
+            line-height: 1.45;
+            margin-bottom: 0.7rem;
+        }
+
+        /* Verification Section */
+        .verification-box {
+            background: #181822;
+            border: 1px dashed rgba(212, 175, 55, 0.4);
+            border-radius: 12px;
+            padding: 1rem 1.1rem;
+            margin-bottom: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            justify-content: space-between;
+        }
+        .captcha-badge {
+            background: #09090d;
+            border: 1px solid var(--border-dark);
+            padding: 0.5rem 1.1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 1.2rem;
+            letter-spacing: 0.28em;
+            color: var(--accent-gold-bright);
+            font-weight: 900;
+            user-select: none;
+            text-shadow: 0 0 8px rgba(243, 206, 73, 0.5);
+        }
+        .btn-refresh-captcha {
+            background: transparent;
+            border: none;
+            color: #9e9ea7;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0.2rem;
+            transition: transform 0.2s;
+        }
+        .btn-refresh-captcha:hover { color: #fff; transform: rotate(90deg); }
+
+        /* Plan Box */
+        .plan-box {
+            background: #171720;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 10px;
+            padding: 0.9rem 1.1rem;
+            margin-bottom: 1.2rem;
+        }
+        .plan-box .top { display: flex; justify-content: space-between; margin-bottom: 0.3rem; }
+        .plan-box .badge { color: var(--accent-green); font-weight: 800; font-size: 0.75rem; }
+        .plan-box .price { font-weight: 800; color: #fff; font-size: 0.85rem; }
+        .plan-box h4 { color: #fff; font-size: 0.95rem; margin-bottom: 0.15rem; }
+        .plan-box p { font-size: 0.78rem; color: #888; margin: 0; }
+
+        /* Submit Buttons */
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold));
+            color: #000;
+            padding: 0.95rem 1.4rem;
+            border-radius: var(--radius-pill);
+            font-weight: 800;
+            font-size: 0.98rem;
+            letter-spacing: 0.04em;
+            border: none;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: all 0.25s;
+            text-align: center;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-quick-fill {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #a1a1aa;
+            padding: 0.45rem 1rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .btn-quick-fill:hover { color: #fff; border-color: var(--accent-gold); }
+
+        .form-footer-note {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #71717a;
+            margin-top: 1.2rem;
+        }
+        .form-footer-note a { color: var(--accent-gold); text-decoration: none; font-weight: 600; }
+        .form-footer-note a:hover { text-decoration: underline; }
+
+        @media (max-width: 950px) {
+            .auth-card { grid-template-columns: 1fr; }
+            .info-side { padding: 2.2rem 1.8rem; }
+            .form-side { padding: 2.2rem 1.8rem; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAVBAR -->
+    <header class="top-navbar">
+        <a href="index.html" class="nav-brand">
+            <span class="crest">⚔️</span>
+            <div>
+                <span class="brand">LAANCE</span>
+                <span class="sub">STUDIO AGATHO</span>
+            </div>
+        </a>
+        <div class="nav-actions">
+            <a href="second-page.html" class="btn-nav-outline">&larr; Back to Features</a>
+        </div>
+    </header>
+
+    <!-- MAIN AUTH CONTAINER -->
+    <main class="main-container">
+        <div class="auth-card">
+            
+            <!-- LEFT INFO BRANDING SIDE -->
+            <div class="info-side">
+                <div>
+                    <div class="crest-lg">⚔️</div>
+                    <h2>LAANCE RESTAURANT PORTAL</h2>
+                    <p>Complete QR-powered contactless dining ecosystem, live kitchen order dispatch, automated midnight audits, and owner intelligence control center.</p>
+
+                    <div class="perks-list">
+                        <div class="perk">
+                            <span class="chk">✓</span>
+                            <div>
+                                <strong>1-Month Free Subscription Included</strong>
+                                <p>₹0 setup fee &middot; 30-day unrestricted trial of full system suite.</p>
+                            </div>
+                        </div>
+                        <div class="perk">
+                            <span class="chk">✓</span>
+                            <div>
+                                <strong>Instant Table QR Code Generator</strong>
+                                <p>Generate printable branded QR cards for all tables in 1-click.</p>
+                            </div>
+                        </div>
+                        <div class="perk">
+                            <span class="chk">✓</span>
+                            <div>
+                                <strong>Live WhatsApp Kitchen Dispatch</strong>
+                                <p>Orders directly stream to chef &amp; owner WhatsApp immediately.</p>
+                            </div>
+                        </div>
+                        <div class="perk">
+                            <span class="chk">✓</span>
+                            <div>
+                                <strong>Owner Performance &amp; Analytics Lock</strong>
+                                <p>Protected owner-only revenue and attendance statistics with master password.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="security-badge">
+                    <span class="icon">🔒</span>
+                    <div class="text">
+                        <strong>Encrypted Dual-Tier Security</strong><br>
+                        Protected access for Staff Operations and Dedicated Owner Analytics.
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT FORM SIDE -->
+            <div class="form-side">
+
+                <!-- TAB SWITCHER: SIGN IN vs SIGN UP -->
+                <div class="tab-switcher">
+                    <button type="button" class="tab-btn active" id="tabSignInBtn" onclick="switchAuthMode('signin')">
+                        Sign In
+                    </button>
+                    <button type="button" class="tab-btn" id="tabSignUpBtn" onclick="switchAuthMode('signup')">
+                        Create Account (Sign Up)
+                    </button>
+                </div>
+
+                <!-- ALERTS -->
+                <div id="alertSuccess" class="alert-box alert-success">
+                    <span>✓</span>
+                    <span id="alertSuccessText">Operation completed successfully.</span>
+                </div>
+                <div id="alertError" class="alert-box alert-error">
+                    <span>⚠️</span>
+                    <span id="alertErrorText">Please verify all required fields.</span>
+                </div>
+
+                <!-- ============================================== -->
+                <!-- SIGN IN FORM (TAB 1) -->
+                <!-- ============================================== -->
+                <div id="sectionSignIn">
+                    <span class="step-tag">AUTHENTICATION &middot; RESTAURANT ACCESS</span>
+                    <h3>Welcome Back</h3>
+                    <p class="form-subtitle">Enter your restaurant credentials to manage food items, table QRs, and live orders.</p>
+
+                    <form onsubmit="handleSignInSubmit(event)">
+                        
+                        <div class="form-group">
+                            <label>
+                                Restaurant ID / Username
+                                <span class="hint">e.g. REST-PARIS-01</span>
+                            </label>
+                            <div class="input-wrap">
+                                <span class="prefix-icon">🏢</span>
+                                <input type="text" id="signInRestId" placeholder="Enter Restaurant ID" value="REST-PARIS-01" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                Master Account Password
+                                <span class="hint">Required</span>
+                            </label>
+                            <div class="input-wrap">
+                                <span class="prefix-icon">🔑</span>
+                                <input type="password" id="signInPassword" placeholder="Enter Account Password" value="laance2026" required />
+                                <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('signInPassword', this)">👁️</button>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin: 1rem 0;">
+                            <label style="display:inline-flex; align-items:center; gap:0.5rem; font-size:0.82rem; color:#aaa; cursor:pointer;">
+                                <input type="checkbox" id="rememberMe" checked style="accent-color:var(--accent-gold);" />
+                                Remember login session
+                            </label>
+                            <a href="javascript:void(0)" onclick="quickDemoFill()" style="font-size:0.8rem; color:var(--accent-gold); text-decoration:none; font-weight:700;">
+                                Auto-Fill Demo
+                            </a>
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            Sign In to Restaurant Portal &rarr;
+                        </button>
+
+                        <div style="text-align:center;">
+                            <button type="button" class="btn-quick-fill" onclick="switchAuthMode('signup')">
+                                ✨ New Restaurant? Create an account here
+                            </button>
+                        </div>
+
+                        <p class="form-footer-note">
+                            Need help logging in? Contact LAANCE Support &middot; <a href="javascript:void(0)" onclick="quickDemoFill()">Click for Quick Demo Access</a>
+                        </p>
+                    </form>
+                </div>
+
+                <!-- ============================================== -->
+                <!-- SIGN UP / REGISTRATION FORM (TAB 2) -->
+                <!-- ============================================== -->
+                <div id="sectionSignUp" style="display:none;">
+                    <span class="step-tag">NEW RESTAURANT SETUP &middot; STEP 1 OF 2</span>
+                    <h3>Register Restaurant Account</h3>
+                    <p class="form-subtitle">Create your business profile, customize your QR menu, and set up your Owner Performance Security PIN.</p>
+
+                    <form onsubmit="handleSignUpSubmit(event)">
+                        
+                        <!-- 1. Company Name -->
+                        <div class="form-group">
+                            <label>
+                                Company / Restaurant Name *
+                                <span class="hint">Public dining name</span>
+                            </label>
+                            <div class="input-wrap">
+                                <span class="prefix-icon">🍽️</span>
+                                <input type="text" id="regCompanyName" placeholder="e.g. Royal Palace Bistro" value="Royal Spice Fine Dining" required />
+                            </div>
+                        </div>
+
+                        <!-- 2. Restaurant Unique ID -->
+                        <div class="form-group">
+                            <label>
+                                Restaurant Unique ID *
+                                <span class="hint">Used for sign in</span>
+                            </label>
+                            <div class="input-wrap">
+                                <span class="prefix-icon">🆔</span>
+                                <input type="text" id="regRestId" placeholder="e.g. REST-ROYAL-01" value="REST-ROYAL-01" required />
+                            </div>
+                        </div>
+
+                        <!-- 3. Password & 4. Re-Password (Confirm) -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Master Password *</label>
+                                <div class="input-wrap">
+                                    <span class="prefix-icon">🔒</span>
+                                    <input type="password" id="regPassword" placeholder="Minimum 6 characters" value="royal2026" required />
+                                    <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('regPassword', this)">👁️</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Re-enter Password *</label>
+                                <div class="input-wrap">
+                                    <span class="prefix-icon">🔒</span>
+                                    <input type="password" id="regConfirmPassword" placeholder="Confirm password" value="royal2026" required />
+                                    <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('regConfirmPassword', this)">👁️</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5. OWNER PERFORMANCE PAGE PASSWORD CREATE OPTION -->
+                        <div class="special-callout-box">
+                            <div class="head">
+                                <span>🛡️</span>
+                                <span>Owner Performance Page Password (Create Option) *</span>
+                            </div>
+                            <p>
+                                A separate master security key created specifically to protect your <strong>Owner Performance &amp; Revenue Analytics</strong>.
+                                Kitchen staff can use normal login, but only you can open the Performance &amp; Sales Ledger using this password.
+                            </p>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <div class="input-wrap">
+                                    <span class="prefix-icon">👑</span>
+                                    <input type="password" id="regOwnerPerfPassword" placeholder="Create Owner Performance PIN / Password" value="owner777" required />
+                                    <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('regOwnerPerfPassword', this)">👁️</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 6. CONTACT & LOCATION DETAILS SECTION (Address, Phone Number, etc.) -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>
+                                    Owner WhatsApp / Phone *
+                                    <span class="hint">For order notifications</span>
+                                </label>
+                                <div class="input-wrap">
+                                    <span class="prefix-icon">📱</span>
+                                    <input type="tel" id="regPhone" placeholder="+91 98470 12345" value="+91 98470 54321" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Business Email *</label>
+                                <div class="input-wrap">
+                                    <span class="prefix-icon">✉️</span>
+                                    <input type="email" id="regEmail" placeholder="contact@restaurant.com" value="contact@royalspice.com" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                Restaurant Physical Address *
+                                <span class="hint">Location / Street &amp; City</span>
+                            </label>
+                            <div class="input-wrap">
+                                <span class="prefix-icon">📍</span>
+                                <input type="text" id="regAddress" placeholder="e.g. 42 MG Road, Marine Drive, Kochi, Kerala" value="42 Heritage Boulevard, Marine Promenade, Kochi" required />
+                            </div>
+                        </div>
+
+                        <!-- 7. VERIFICATION CODE OPTION -->
+                        <div class="form-group">
+                            <label>
+                                Security Verification Code *
+                                <span class="hint">Type the code displayed</span>
+                            </label>
+                            <div class="verification-box">
+                                <div style="display:flex; align-items:center; gap:0.6rem;">
+                                    <span id="captchaCode" class="captcha-badge">8K4M9</span>
+                                    <button type="button" class="btn-refresh-captcha" onclick="generateCaptcha()" title="Refresh code">🔄</button>
+                                </div>
+                                <div style="flex-grow:1; max-width:180px;">
+                                    <input type="text" id="regCaptchaInput" placeholder="Enter code" style="width:100%; text-transform:uppercase; font-weight:800; padding:0.6rem 0.8rem; background:#101016; border:1px solid var(--border-dark); border-radius:8px; color:#fff; text-align:center;" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 8. SUBSCRIPTION PACKAGE -->
+                        <div class="plan-box">
+                            <div class="top">
+                                <span class="badge">ACTIVE &middot; 100% FREE TRIAL</span>
+                                <span class="price">₹0 / First 30 Days</span>
+                            </div>
+                            <h4>1-Month Free SaaS Access Package</h4>
+                            <p>Full Table QR Generation, Menu Builder, Live Orders &amp; Midnight WhatsApp Financial Audits included.</p>
+                        </div>
+
+                        <!-- 9. CREATE ACCOUNT BUTTON -->
+                        <button type="submit" class="btn-submit">
+                            Create Account &amp; Proceed to Sign In &rarr;
+                        </button>
+
+                        <div style="text-align:center;">
+                            <button type="button" class="btn-quick-fill" onclick="switchAuthMode('signin')">
+                                Already have an account? Sign In here
+                            </button>
+                        </div>
+
+                        <p class="form-footer-note">
+                            By clicking Create Account, you activate the 30-day Free Trial with zero upfront payment.
+                        </p>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <script>
+        let currentCaptcha = "7H9P2";
+
+        // Generate Random Captcha
+        function generateCaptcha() {
+            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+            let code = "";
+            for (let i = 0; i < 5; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            currentCaptcha = code;
+            document.getElementById('captchaCode').textContent = code;
+        }
+
+        // Switch between Sign In and Sign Up tabs
+        function switchAuthMode(mode) {
+            const tabIn = document.getElementById('tabSignInBtn');
+            const tabUp = document.getElementById('tabSignUpBtn');
+            const secIn = document.getElementById('sectionSignIn');
+            const secUp = document.getElementById('sectionSignUp');
+
+            hideAlerts();
+
+            if (mode === 'signup') {
+                tabIn.classList.remove('active');
+                tabUp.classList.add('active');
+                secIn.style.display = 'none';
+                secUp.style.display = 'block';
+                generateCaptcha();
+            } else {
+                tabUp.classList.remove('active');
+                tabIn.classList.add('active');
+                secUp.style.display = 'none';
+                secIn.style.display = 'block';
+            }
+        }
+
+        // Toggle Show/Hide Password
+        function togglePasswordVisibility(inputId, btn) {
+            const inp = document.getElementById(inputId);
+            if (inp.type === 'password') {
+                inp.type = 'text';
+                btn.textContent = '🔒';
+            } else {
+                inp.type = 'password';
+                btn.textContent = '👁️';
+            }
+        }
+
+        // Show Alerts
+        function showError(msg) {
+            const el = document.getElementById('alertError');
+            document.getElementById('alertErrorText').textContent = msg;
+            el.style.display = 'flex';
+            document.getElementById('alertSuccess').style.display = 'none';
+        }
+
+        function showSuccess(msg) {
+            const el = document.getElementById('alertSuccess');
+            document.getElementById('alertSuccessText').textContent = msg;
+            el.style.display = 'flex';
+            document.getElementById('alertError').style.display = 'none';
+        }
+
+        function hideAlerts() {
+            document.getElementById('alertError').style.display = 'none';
+            document.getElementById('alertSuccess').style.display = 'none';
+        }
+
+        // Quick Auto-Fill for Demo
+        function quickDemoFill() {
+            document.getElementById('signInRestId').value = 'REST-PARIS-01';
+            document.getElementById('signInPassword').value = 'laance2026';
+            showSuccess('Demo credentials auto-filled! Click Sign In to continue.');
+        }
+
+        // HANDLE SIGN UP / REGISTRATION SUBMIT
+        function handleSignUpSubmit(e) {
+            e.preventDefault();
+            hideAlerts();
+
+            const companyName = document.getElementById('regCompanyName').value.trim();
+            const restId = document.getElementById('regRestId').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const ownerPerfPassword = document.getElementById('regOwnerPerfPassword').value;
+            const phone = document.getElementById('regPhone').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const address = document.getElementById('regAddress').value.trim();
+            const captchaInput = document.getElementById('regCaptchaInput').value.trim().toUpperCase();
+
+            // Validation
+            if (!companyName || !restId || !password || !phone || !address) {
+                showError('Please fill in all required registration fields.');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError('Passwords do not match. Please re-enter the password accurately.');
+                return;
+            }
+
+            if (password.length < 5) {
+                showError('Password must be at least 5 characters.');
+                return;
+            }
+
+            if (!ownerPerfPassword) {
+                showError('Please set an Owner Performance Page Password to protect your revenue analytics.');
+                return;
+            }
+
+            if (captchaInput !== currentCaptcha) {
+                showError('Incorrect Security Verification code. Please enter the displayed code.');
+                generateCaptcha();
+                return;
+            }
+
+            // Create Profile Record
+            const newRestaurant = {
+                companyName: companyName,
+                name: companyName,
+                id: restId,
+                password: password,
+                ownerPerfPassword: ownerPerfPassword,
+                phone: phone,
+                whatsapp: phone,
+                email: email,
+                address: address,
+                subscription: '1-Month Free Trial Active',
+                registeredAt: new Date().toISOString()
+            };
+
+            // Save in Registered Accounts list
+            const existingAccounts = JSON.parse(localStorage.getItem('laance_registered_users')) || [];
+            // Remove previous duplicate if ID matches
+            const filtered = existingAccounts.filter(a => a.id.toLowerCase() !== restId.toLowerCase());
+            filtered.push(newRestaurant);
+            localStorage.setItem('laance_registered_users', JSON.stringify(filtered));
+
+            // Set as current active restaurant
+            localStorage.setItem('laance_restaurant', JSON.stringify(newRestaurant));
+
+            // ====== SYNC TO OWNER PRIVATE DASHBOARD (laance_saas_users) ======
+            const saasUsers = JSON.parse(localStorage.getItem('laance_saas_users')) || [];
+            const saasFiltered = saasUsers.filter(u => (u.id || '').toLowerCase() !== restId.toLowerCase());
+            const saasUserObj = {
+                id: restId,
+                name: companyName,
+                businessName: companyName,
+                phone: phone,
+                whatsapp: phone,
+                telegram: phone,
+                email: email,
+                address: address,
+                planId: 'PLAN-001',
+                planName: '1-Month Free Trial',
+                amount: 0,
+                discount: 0,
+                finalAmount: 0,
+                paymentStatus: 'Trial Active',
+                status: 'Active',
+                invoiceNo: '',
+                joinedAt: new Date().toISOString()
+            };
+            saasFiltered.unshift(saasUserObj);
+            localStorage.setItem('laance_saas_users', JSON.stringify(saasFiltered));
+
+            // Log activity
+            const log = JSON.parse(localStorage.getItem('laance_activity_log')) || [];
+            log.unshift({
+                time: new Date().toLocaleString('en-IN', { hour:'2-digit', minute:'2-digit', day:'2-digit', month:'short' }),
+                action: 'Restaurant Registered',
+                user: companyName,
+                details: `${restId} · Phone: ${phone} · ${address}`
+            });
+            localStorage.setItem('laance_activity_log', JSON.stringify(log));
+
+            // ====== SYNC DIRECTLY TO OWNER'S GOOGLE SHEET ======
+            const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwog9q_MHyhwRbHyEik4D1M9mmGoYXsgkGZxZ4iJuSO31MwCbdPwgOL8WQDLXS8g9uY8w/exec';
+            try {
+                fetch(GOOGLE_SHEET_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        type: 'new_registration',
+                        data: saasUserObj,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+            } catch(err) {
+                console.log('Google Sheet dispatch error:', err);
+            }
+
+            // Switch to Sign In tab as requested ("ATH CREATE NEKKIYAL PINNE POVENDE PAGE ADTHE PAGE ( SIGN IN > REGISTRACTION > )")
+            switchAuthMode('signin');
+            document.getElementById('signInRestId').value = restId;
+            document.getElementById('signInPassword').value = password;
+            showSuccess(`🎉 Account "${companyName}" created successfully! Please Sign In below to access your Control Hub.`);
+        }
+
+        // HANDLE SIGN IN SUBMIT
+        function handleSignInSubmit(e) {
+            e.preventDefault();
+            hideAlerts();
+
+            const restId = document.getElementById('signInRestId').value.trim();
+            const password = document.getElementById('signInPassword').value;
+
+            if (!restId || !password) {
+                showError('Please provide both Restaurant ID and Password.');
+                return;
+            }
+
+            // Look up in registered accounts
+            const registeredAccounts = JSON.parse(localStorage.getItem('laance_registered_users')) || [];
+            let matchedUser = registeredAccounts.find(u => u.id.toLowerCase() === restId.toLowerCase());
+
+            // Fallback for default demo bistro
+            if (!matchedUser && (restId === 'REST-PARIS-01' || restId.toLowerCase() === 'demo')) {
+                matchedUser = {
+                    companyName: 'La Lune French Bistro',
+                    name: 'La Lune French Bistro',
+                    id: 'REST-PARIS-01',
+                    password: 'laance2026',
+                    ownerPerfPassword: 'owner2026',
+                    phone: '+91 98470 12345',
+                    whatsapp: '+91 98470 12345',
+                    address: '14 Rue Saint-Honoré, Paris & Marine Drive Kochi',
+                    email: 'bonjour@lalunebistro.com',
+                    subscription: '1-Month Free Trial Active'
+                };
+            }
+
+            if (!matchedUser) {
+                showError('Restaurant ID not found. Please verify or register a new account.');
+                return;
+            }
+
+            if (matchedUser.password !== password) {
+                showError('Invalid password. Please check your credentials.');
+                return;
+            }
+
+            // Successful Login
+            localStorage.setItem('laance_restaurant', JSON.stringify(matchedUser));
+            localStorage.setItem('laance_active_session', JSON.stringify({
+                id: matchedUser.id,
+                name: matchedUser.companyName || matchedUser.name,
+                loginTime: new Date().toISOString()
+            }));
+
+            showSuccess('Login verified! Opening Restaurant Management Hub...');
+
+            // Navigate directly to the Restaurant Control Dashboard
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 600);
+        }
+
+        // On Load Check URL query param (e.g. login.html?mode=signup)
+        document.addEventListener('DOMContentLoaded', () => {
+            generateCaptcha();
+            const urlParams = new URLSearchParams(window.location.search);
+            const mode = urlParams.get('mode');
+            if (mode === 'signup' || mode === 'register') {
+                switchAuthMode('signup');
+            } else {
+                switchAuthMode('signin');
+            }
+        });
+    </script>
+</body>
+</html>

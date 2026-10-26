@@ -1,0 +1,6 @@
+flask==3.1.1
+flask-cors==5.0.1
+pusher==4.0.0
+supabase==2.13.0
+gunicorn==23.0.0
+python-dotenv==1.1.0

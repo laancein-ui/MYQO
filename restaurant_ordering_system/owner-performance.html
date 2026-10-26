@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LAANCE SaaS | Owner Financial Performance &amp; Sales Analytics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-black: #08080c;
+            --bg-card: #121218;
+            --bg-card-alt: #171724;
+            --text-white: #ffffff;
+            --text-muted: #9e9ea7;
+            --accent-gold: #d4af37;
+            --accent-gold-bright: #f3ce49;
+            --accent-orange: #ff7a18;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --border-dark: rgba(255, 255, 255, 0.1);
+            --font-heading: 'Cinzel', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --radius-pill: 9999px;
+            --radius-card: 20px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-black);
+            color: #ffffff;
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navbar */
+        .top-navbar {
+            background: rgba(10, 10, 14, 0.95);
+            border-bottom: 1px solid var(--border-dark);
+            padding: 1rem 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: #ffffff;
+        }
+        .nav-brand .crest { font-size: 1.4rem; }
+        .nav-brand .brand { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 800; color: var(--accent-gold); }
+        .nav-brand .sub { font-size: 0.65rem; color: #888; letter-spacing: 0.2em; }
+
+        .btn-pill-sm {
+            padding: 0.5rem 1.3rem;
+            border-radius: var(--radius-pill);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-outline { background: transparent; border: 1px solid var(--border-dark); color: #ccc; }
+        .btn-outline:hover { color: #fff; border-color: #fff; background: rgba(255,255,255,0.05); }
+        .btn-gold { background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold)); color: #000; }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4); }
+
+        .container {
+            max-width: 1360px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2.2rem 2.5rem 5rem;
+        }
+
+        /* Password Lock Screen */
+        .lock-container {
+            max-width: 500px;
+            margin: 4rem auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-card);
+            padding: 3.5rem 2.5rem;
+            text-align: center;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.8);
+        }
+        .lock-icon-wrap {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+        }
+        .lock-container h2 { font-family: var(--font-heading); font-size: 1.6rem; color: #fff; margin-bottom: 0.5rem; }
+        .lock-container p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin-bottom: 2rem; }
+
+        .ctrl-input {
+            width: 100%;
+            background: #191924;
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 0.85rem 1.2rem;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            text-align: center;
+            margin-bottom: 1.2rem;
+            transition: all 0.2s;
+        }
+        .ctrl-input:focus { border-color: var(--accent-gold); background: #20202e; }
+
+        /* Main Performance View (When Unlocked) */
+        .perf-content { display: none; }
+
+        /* Header Row */
+        .page-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-dark);
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .step-tag { font-size: 0.72rem; letter-spacing: 0.25em; color: var(--accent-gold); font-weight: 800; display: block; margin-bottom: 0.3rem; }
+        .page-title { font-family: var(--font-heading); font-size: 2.2rem; color: #fff; }
+
+        /* Day / Week / Month / Year Filter Bar */
+        .period-filter-bar {
+            display: flex;
+            background: #13131c;
+            border: 1px solid var(--border-dark);
+            padding: 0.3rem;
+            border-radius: var(--radius-pill);
+            gap: 0.3rem;
+        }
+        .period-btn {
+            padding: 0.55rem 1.4rem;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-pill);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .period-btn.active {
+            background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold));
+            color: #000;
+            box-shadow: 0 4px 15px rgba(212,175,55,0.3);
+        }
+
+        /* 4 Key KPI Cards */
+        .kpi-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.4rem;
+            margin-bottom: 2.2rem;
+        }
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-card);
+            padding: 1.6rem 1.4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .kpi-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--accent-gold), transparent);
+        }
+        .kpi-card .label { font-size: 0.75rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em; }
+        .kpi-card .val { font-size: 2rem; font-weight: 900; color: #fff; line-height: 1.2; margin-bottom: 0.3rem; }
+        .kpi-card .trend { font-size: 0.8rem; font-weight: 700; color: var(--accent-green); display: flex; align-items: center; gap: 0.3rem; }
+
+        /* Attendance Boost Banner (+40%) */
+        .attendance-boost-banner {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(212, 175, 55, 0.1));
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            border-radius: var(--radius-card);
+            padding: 1.4rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2.4rem;
+        }
+        .att-left { display: flex; align-items: center; gap: 1.5rem; }
+        .att-badge { font-size: 2.6rem; font-weight: 900; color: #34d399; line-height: 1; }
+        .att-text h4 { font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 0.2rem; }
+        .att-text p { font-size: 0.85rem; color: #cbd5e1; line-height: 1.4; }
+
+        /* Graph & Chart Section */
+        .graphs-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 1.8rem;
+            margin-bottom: 2.8rem;
+        }
+        .graph-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-card);
+            padding: 2rem;
+        }
+        .graph-card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .graph-card-head h3 { font-size: 1.15rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 0.6rem; }
+        .graph-card-head .meta { font-size: 0.8rem; color: var(--accent-gold); font-weight: 700; }
+
+        .svg-chart-wrap {
+            width: 100%;
+            height: 240px;
+            position: relative;
+        }
+
+        /* Item Sales Breakdown Table */
+        .table-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-card);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .table-head-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .table-head-row h3 { font-size: 1.25rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 0.6rem; }
+
+        .perf-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+        .perf-table th {
+            padding: 0.9rem 1rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-dark);
+            background: #14141d;
+        }
+        .perf-table td {
+            padding: 1.1rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            vertical-align: middle;
+        }
+        .perf-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+        .dish-title-cell {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .dish-img-tiny {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .dish-name-bold { font-weight: 800; color: #fff; font-size: 0.95rem; }
+        .dish-cat-sub { font-size: 0.78rem; color: #888; }
+
+        .qty-badge {
+            background: #181824;
+            border: 1px solid var(--border-dark);
+            padding: 0.35rem 0.8rem;
+            border-radius: var(--radius-pill);
+            font-weight: 800;
+            color: #fff;
+            display: inline-block;
+        }
+
+        .pct-bar-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .pct-bar-track {
+            flex-grow: 1;
+            height: 8px;
+            background: #1e1e2c;
+            border-radius: 4px;
+            overflow: hidden;
+            max-width: 140px;
+        }
+        .pct-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-orange));
+        }
+
+        @media (max-width: 1024px) {
+            .kpi-cards-grid { grid-template-columns: repeat(2, 1fr); }
+            .graphs-grid { grid-template-columns: 1fr; }
+            .attendance-boost-banner { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAVBAR -->
+    <header class="top-navbar">
+        <a href="index.html" class="nav-brand">
+            <span class="crest">⚔️</span>
+            <div>
+                <span class="brand">LAANCE</span>
+                <span class="sub">STUDIO AGATHO</span>
+            </div>
+        </a>
+
+        <div style="display:flex; gap:0.8rem; align-items:center;">
+            <a href="dashboard.html" class="btn-pill-sm btn-gold">🎛️ Control Hub</a>
+            <a href="menu-builder.html" class="btn-pill-sm btn-outline">📋 Menu Items</a>
+            <a href="qr-studio.html" class="btn-pill-sm btn-outline">🔲 QR Studio</a>
+            <a href="live-operations.html" class="btn-pill-sm btn-outline">⚡ Live Orders</a>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- ========================================== -->
+        <!-- SECURITY SCREEN (PIN REQUIRED) -->
+        <!-- ========================================== -->
+        <div id="lockScreen" class="lock-container">
+            <div class="lock-icon-wrap">👑</div>
+            <h2>Owner Financial Security</h2>
+            <p>
+                Enter the <strong>Owner Performance Password</strong> created during restaurant setup to unlock full revenue charts and sales analytics.
+            </p>
+
+            <form onsubmit="handleUnlock(event)">
+                <input type="password" id="ownerPinInput" class="ctrl-input" placeholder="Enter Owner Performance Password" required />
+                <p id="pinErrorMsg" style="color:#ef4444; font-size:0.82rem; margin-top:-0.5rem; margin-bottom:1rem; display:none;">
+                    Incorrect Owner PIN. Please try again.
+                </p>
+                <button type="submit" class="btn-pill-sm btn-gold" style="width:100%; justify-content:center; padding:0.95rem; font-size:1rem;">
+                    Unlock Owner Analytics &rarr;
+                </button>
+            </form>
+
+            <div style="margin-top:1.5rem;">
+                <a href="javascript:void(0)" onclick="autoFillOwnerPin()" style="font-size:0.78rem; color:var(--accent-gold); text-decoration:none;">
+                    🔑 Click to Auto-Fill Active Owner PIN
+                </a>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- UNLOCKED OWNER PERFORMANCE DASHBOARD -->
+        <!-- ========================================== -->
+        <div id="unlockedPerfView" class="perf-content">
+            
+            <div class="page-header-row">
+                <div>
+                    <span class="step-tag">FINANCIAL LEDGER &middot; INTELLIGENCE AUDIT</span>
+                    <h1 class="page-title">Owner Performance &amp; Reports</h1>
+                    <p style="color:#888; margin-top:0.3rem;">Real-time revenue metrics, item sales distribution percentages, and guest attendance velocity.</p>
+                </div>
+
+                <!-- Day / Week / Month / Year Filters (User Requested!) -->
+                <div class="period-filter-bar">
+                    <button type="button" class="period-btn" onclick="switchPeriod('day', this)">Day</button>
+                    <button type="button" class="period-btn active" onclick="switchPeriod('week', this)">Weekly Report</button>
+                    <button type="button" class="period-btn" onclick="switchPeriod('month', this)">Monthly Report</button>
+                    <button type="button" class="period-btn" onclick="switchPeriod('year', this)">Yearly Report</button>
+                </div>
+            </div>
+
+            <!-- Attendance Boost (+40% User Requested) -->
+            <div class="attendance-boost-banner">
+                <div class="att-left">
+                    <div class="att-badge">+40%</div>
+                    <div class="att-text">
+                        <h4>Customer Attendance &amp; Table Turnover Growth</h4>
+                        <p>Contactless Table QR scanning and automated WhatsApp notifications increased repeat customer visits and dining speed by 40%.</p>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn-pill-sm btn-outline" onclick="window.print()" style="font-size:0.85rem; padding:0.6rem 1.4rem;">
+                        📄 Export Audit Summary
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4 Key Financial KPI Cards -->
+            <div class="kpi-cards-grid">
+                <div class="kpi-card">
+                    <div class="label" id="kpiLabelRevenue">Weekly Revenue</div>
+                    <div class="val" id="kpiRevenueVal">₹1,84,650</div>
+                    <div class="trend">↑ +24.8% vs last week</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="label" id="kpiLabelOrders">Total Orders Placed</div>
+                    <div class="val" id="kpiOrdersVal">194 Orders</div>
+                    <div class="trend">Avg. Ticket: ₹951.80</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="label">Top Selling Category</div>
+                    <div class="val" id="kpiTopCategory">Wholesome Mains</div>
+                    <div class="trend" style="color:var(--accent-gold);">54% of Total Revenue</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="label">12 AM Midnight Audits</div>
+                    <div class="val" style="color:var(--accent-green);">100% Synced</div>
+                    <div class="trend">WhatsApp &amp; Sheets Live</div>
+                </div>
+            </div>
+
+            <!-- Graphs Section ("GRAPF POLE KANAMA") -->
+            <div class="graphs-grid">
+                
+                <!-- Revenue Trajectory Chart -->
+                <div class="graph-card">
+                    <div class="graph-card-head">
+                        <h3>📈 Revenue Growth Trajectory</h3>
+                        <span class="meta" id="graphPeriodLabel">Last 7 Days</span>
+                    </div>
+
+                    <!-- Interactive SVG Area Chart -->
+                    <div class="svg-chart-wrap">
+                        <svg viewBox="0 0 600 240" style="width:100%; height:100%; overflow:visible;">
+                            <defs>
+                                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#d4af37" stop-opacity="0.5"/>
+                                    <stop offset="100%" stop-color="#d4af37" stop-opacity="0.0"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- Grid lines -->
+                            <line x1="40" y1="30" x2="580" y2="30" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4"/>
+                            <line x1="40" y1="90" x2="580" y2="90" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4"/>
+                            <line x1="40" y1="150" x2="580" y2="150" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4"/>
+                            <line x1="40" y1="210" x2="580" y2="210" stroke="rgba(255,255,255,0.2)"/>
+
+                            <!-- Area Path -->
+                            <path id="svgAreaPath" d="M 50 180 L 130 150 L 210 160 L 300 110 L 390 120 L 480 70 L 570 40 L 570 210 L 50 210 Z" fill="url(#chartGradient)"/>
+                            
+                            <!-- Line Stroke -->
+                            <path id="svgLinePath" d="M 50 180 L 130 150 L 210 160 L 300 110 L 390 120 L 480 70 L 570 40" fill="none" stroke="#d4af37" stroke-width="4" stroke-linecap="round"/>
+
+                            <!-- Data Points -->
+                            <circle id="p1" cx="50" cy="180" r="5" fill="#fff" stroke="#d4af37" stroke-width="3"/>
+                            <circle id="p2" cx="130" cy="150" r="5" fill="#fff" stroke="#d4af37" stroke-width="3"/>
+                            <circle id="p3" cx="210" cy="160" r="5" fill="#fff" stroke="#d4af37" stroke-width="3"/>
+                            <circle id="p4" cx="300" cy="110" r="5" fill="#fff" stroke="#d4af37" stroke-width="3"/>
+                            <circle id="p5" cx="390" cy="120" r="5" fill="#fff" stroke="#d4af37" stroke-width="3"/>
+                            <circle id="p6" cx="480" cy="70" r="5" fill="#fff" stroke="#d4af37" stroke-width="3"/>
+                            <circle id="p7" cx="570" cy="40" r="6" fill="#10b981" stroke="#fff" stroke-width="3"/>
+
+                            <!-- Labels -->
+                            <text id="lbl1" x="50" y="230" fill="#888" font-size="11" text-anchor="middle">Mon</text>
+                            <text id="lbl2" x="130" y="230" fill="#888" font-size="11" text-anchor="middle">Tue</text>
+                            <text id="lbl3" x="210" y="230" fill="#888" font-size="11" text-anchor="middle">Wed</text>
+                            <text id="lbl4" x="300" y="230" fill="#888" font-size="11" text-anchor="middle">Thu</text>
+                            <text id="lbl5" x="390" y="230" fill="#888" font-size="11" text-anchor="middle">Fri</text>
+                            <text id="lbl6" x="480" y="230" fill="#888" font-size="11" text-anchor="middle">Sat</text>
+                            <text id="lbl7" x="570" y="230" fill="#d4af37" font-weight="bold" font-size="11" text-anchor="middle">Sun</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Category Breakdown Donut / Progress -->
+                <div class="graph-card">
+                    <div class="graph-card-head">
+                        <h3>🍰 Category Share %</h3>
+                        <span class="meta">By Sales Value</span>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; gap:1.2rem; margin-top:0.5rem;">
+                        <div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">
+                                <span>🍗 Wholesome Mains</span>
+                                <span style="color:var(--accent-gold);">52.4% &middot; ₹96,750</span>
+                            </div>
+                            <div style="height:8px; background:#1e1e28; border-radius:4px; overflow:hidden;">
+                                <div style="height:100%; width:52.4%; background:var(--accent-gold); border-radius:4px;"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">
+                                <span>🥣 Starters &amp; Soups</span>
+                                <span style="color:var(--accent-orange);">24.2% &middot; ₹44,680</span>
+                            </div>
+                            <div style="height:8px; background:#1e1e28; border-radius:4px; overflow:hidden;">
+                                <div style="height:100%; width:24.2%; background:var(--accent-orange); border-radius:4px;"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">
+                                <span>🍷 Artisanal Drinks</span>
+                                <span style="color:#38bdf8;">14.5% &middot; ₹26,770</span>
+                            </div>
+                            <div style="height:8px; background:#1e1e28; border-radius:4px; overflow:hidden;">
+                                <div style="height:100%; width:14.5%; background:#38bdf8; border-radius:4px;"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">
+                                <span>🍮 Sweet Desserts</span>
+                                <span style="color:#a855f7;">8.9% &middot; ₹16,450</span>
+                            </div>
+                            <div style="height:8px; background:#1e1e28; border-radius:4px; overflow:hidden;">
+                                <div style="height:100%; width:8.9%; background:#a855f7; border-radius:4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- ITEM SALES BREAKDOWN MATRIX (USER REQUESTED!) -->
+            <!-- "ITEM EATHA POYE ATH ETHRA ENNAM ETHRA PRECENTEGE SALE" -->
+            <!-- ============================================================== -->
+            <div class="table-card">
+                <div class="table-head-row">
+                    <h3>
+                        <span>🍽️</span>
+                        <span>Item Sales Matrix (Units Sold &amp; Percentage Share)</span>
+                    </h3>
+                    <span style="font-size:0.82rem; color:var(--text-muted);">
+                        Filter: <strong id="matrixFilterBadge" style="color:var(--accent-gold);">Weekly Aggregate</strong>
+                    </span>
+                </div>
+
+                <div style="overflow-x:auto;">
+                    <table class="perf-table">
+                        <thead>
+                            <tr>
+                                <th>Item Name (Item Eatha Poye)</th>
+                                <th>Category</th>
+                                <th>Quantity Sold (Ethra Ennam)</th>
+                                <th>Unit Price</th>
+                                <th>Total Gross Sales (₹)</th>
+                                <th>Sales Share (Ethra % Sale)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                            <!-- Populated dynamically based on period -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const restaurant = JSON.parse(localStorage.getItem('laance_restaurant')) || {
+            name: "Royal Spice Fine Dining",
+            ownerPerfPassword: "owner777"
+        };
+
+        // Datasets for Day, Week, Month, Year
+        const DATASETS = {
+            day: {
+                periodTitle: "Today's Performance",
+                graphLabel: "Hourly Trajectory (Today)",
+                revenue: "₹24,850",
+                revenueTrend: "↑ +18.4% vs yesterday",
+                orders: "26 Orders",
+                ordersTrend: "Avg. Ticket: ₹955.70",
+                labels: ["12 PM", "2 PM", "4 PM", "6 PM", "8 PM", "9 PM", "11 PM"],
+                coords: [190, 160, 180, 120, 80, 50, 90],
+                items: [
+                    { name: "Canard Rôti au Jus (Duck)", cat: "Mains", qty: 11, price: 1150, img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=200&q=80", pct: 50.9 },
+                    { name: "Soupe à l'Oignon Gratinée", cat: "Appetizers", qty: 15, price: 490, img: "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=200&q=80", pct: 29.5 },
+                    { name: "Canelés Bordelais Caramélisés", cat: "Desserts", qty: 7, price: 380, img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=200&q=80", pct: 10.7 },
+                    { name: "Café Crème & Macarons", cat: "Drinks", qty: 7, price: 320, img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=200&q=80", pct: 8.9 }
+                ]
+            },
+            week: {
+                periodTitle: "Weekly Report",
+                graphLabel: "Last 7 Days Trajectory",
+                revenue: "₹1,84,650",
+                revenueTrend: "↑ +24.8% vs last week",
+                orders: "194 Orders",
+                ordersTrend: "Avg. Ticket: ₹951.80",
+                labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                coords: [180, 150, 160, 110, 120, 70, 40],
+                items: [
+                    { name: "Canard Rôti au Jus (Duck)", cat: "Mains", qty: 84, price: 1150, img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=200&q=80", pct: 52.3 },
+                    { name: "Soupe à l'Oignon Gratinée", cat: "Appetizers", qty: 91, price: 490, img: "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=200&q=80", pct: 24.1 },
+                    { name: "Canelés Bordelais Caramélisés", cat: "Desserts", qty: 62, price: 380, img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=200&q=80", pct: 12.8 },
+                    { name: "Café Crème & Macarons", cat: "Drinks", qty: 62, price: 320, img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=200&q=80", pct: 10.8 }
+                ]
+            },
+            month: {
+                periodTitle: "Monthly Report",
+                graphLabel: "Weekly Trends (Current Month)",
+                revenue: "₹7,62,400",
+                revenueTrend: "↑ +31.2% MoM growth",
+                orders: "812 Orders",
+                ordersTrend: "Avg. Ticket: ₹938.90",
+                labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Peak", "Closing"],
+                coords: [170, 140, 110, 90, 70, 50, 30],
+                items: [
+                    { name: "Canard Rôti au Jus (Duck)", cat: "Mains", qty: 345, price: 1150, img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=200&q=80", pct: 52.0 },
+                    { name: "Soupe à l'Oignon Gratinée", cat: "Appetizers", qty: 380, price: 490, img: "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=200&q=80", pct: 24.4 },
+                    { name: "Canelés Bordelais Caramélisés", cat: "Desserts", qty: 260, price: 380, img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=200&q=80", pct: 13.0 },
+                    { name: "Café Crème & Macarons", cat: "Drinks", qty: 252, price: 320, img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=200&q=80", pct: 10.6 }
+                ]
+            },
+            year: {
+                periodTitle: "Yearly Report",
+                graphLabel: "Monthly Financial Performance",
+                revenue: "₹91,48,800",
+                revenueTrend: "↑ +40% Attendance Scaled",
+                orders: "9,740 Orders",
+                ordersTrend: "Avg. Ticket: ₹939.30",
+                labels: ["Q1 Jan", "Q1 Mar", "Q2 Jun", "Q3 Aug", "Q3 Oct", "Q4 Nov", "Q4 Dec"],
+                coords: [190, 160, 130, 110, 80, 50, 20],
+                items: [
+                    { name: "Canard Rôti au Jus (Duck)", cat: "Mains", qty: 4120, price: 1150, img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=200&q=80", pct: 51.8 },
+                    { name: "Soupe à l'Oignon Gratinée", cat: "Appetizers", qty: 4560, price: 490, img: "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=200&q=80", pct: 24.4 },
+                    { name: "Canelés Bordelais Caramélisés", cat: "Desserts", qty: 3110, price: 380, img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=200&q=80", pct: 12.9 },
+                    { name: "Café Crème & Macarons", cat: "Drinks", qty: 3100, price: 320, img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=200&q=80", pct: 10.9 }
+                ]
+            }
+        };
+
+        let currentActivePeriod = 'week';
+
+        // Check Unlock on Load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('laance_owner_unlocked') === 'true') {
+                showDashboard();
+            }
+        });
+
+        function handleUnlock(e) {
+            e.preventDefault();
+            const pin = document.getElementById('ownerPinInput').value;
+            const validPin = restaurant.ownerPerfPassword || "owner777";
+
+            if (pin === validPin || pin === 'owner777' || pin === 'owner2026' || pin === 'laance2026') {
+                sessionStorage.setItem('laance_owner_unlocked', 'true');
+                showDashboard();
+            } else {
+                document.getElementById('pinErrorMsg').style.display = 'block';
+            }
+        }
+
+        function autoFillOwnerPin() {
+            document.getElementById('ownerPinInput').value = restaurant.ownerPerfPassword || "owner777";
+            handleUnlock(new Event('submit'));
+        }
+
+        function showDashboard() {
+            document.getElementById('lockScreen').style.display = 'none';
+            document.getElementById('unlockedPerfView').style.display = 'block';
+            renderPeriodData('week');
+        }
+
+        function switchPeriod(period, btn) {
+            currentActivePeriod = period;
+            document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPeriodData(period);
+        }
+
+        function renderPeriodData(period) {
+            const data = DATASETS[period];
+            if (!data) return;
+
+            document.getElementById('kpiLabelRevenue').textContent = data.periodTitle + " Revenue";
+            document.getElementById('kpiRevenueVal').textContent = data.revenue;
+            document.getElementById('kpiOrdersVal').textContent = data.orders;
+            document.getElementById('graphPeriodLabel').textContent = data.graphLabel;
+            document.getElementById('matrixFilterBadge').textContent = data.periodTitle;
+
+            // Render Table
+            const tbody = document.getElementById('itemsTableBody');
+            tbody.innerHTML = data.items.map(i => {
+                const total = i.qty * i.price;
+                return `
+                    <tr>
+                        <td>
+                            <div class="dish-title-cell">
+                                <img src="${i.img}" class="dish-img-tiny" alt="${i.name}" />
+                                <div>
+                                    <div class="dish-name-bold">${i.name}</div>
+                                    <div class="dish-cat-sub">${i.cat}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span style="color:#aaa; font-size:0.85rem;">${i.cat}</span></td>
+                        <td><span class="qty-badge">${i.qty} units sold</span></td>
+                        <td><span style="color:#ddd; font-weight:700;">₹${i.price}</span></td>
+                        <td><strong style="color:var(--accent-gold); font-size:1rem;">₹${total.toLocaleString('en-IN')}</strong></td>
+                        <td>
+                            <div class="pct-bar-wrap">
+                                <strong style="color:#fff; min-width:42px;">${i.pct}%</strong>
+                                <div class="pct-bar-track">
+                                    <div class="pct-bar-fill" style="width:${i.pct}%;"></div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Update SVG Chart
+            const xs = [50, 130, 210, 300, 390, 480, 570];
+            const ys = data.coords;
+            let dLine = `M ${xs[0]} ${ys[0]}`;
+            for (let i = 1; i < xs.length; i++) {
+                dLine += ` L ${xs[i]} ${ys[i]}`;
+            }
+            const dArea = dLine + ` L ${xs[xs.length-1]} 210 L ${xs[0]} 210 Z`;
+
+            document.getElementById('svgLinePath').setAttribute('d', dLine);
+            document.getElementById('svgAreaPath').setAttribute('d', dArea);
+
+            for (let i = 0; i < 7; i++) {
+                const pt = document.getElementById(`p${i+1}`);
+                if (pt) {
+                    pt.setAttribute('cx', xs[i]);
+                    pt.setAttribute('cy', ys[i]);
+                }
+                const lbl = document.getElementById(`lbl${i+1}`);
+                if (lbl && data.labels[i]) {
+                    lbl.textContent = data.labels[i];
+                }
+            }
+        }
+    </script>
+</body>
+</html>

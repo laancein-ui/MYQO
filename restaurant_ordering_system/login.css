@@ -1,0 +1,48 @@
+/* login.css */
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+.container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  width: 320px;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+input, select {
+  width: 100%;
+  padding: .5rem;
+  margin-top: .3rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+button {
+  margin-top: 1.5rem;
+  width: 100%;
+  padding: .7rem;
+  background: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+button:hover { background: #218838; }
+.hidden { display: none; }
+#qrSection { text-align: center; margin-top: 1.5rem; }
+#qrImage { max-width: 200px; margin: 0 auto; }

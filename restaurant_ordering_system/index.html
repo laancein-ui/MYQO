@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LAANCE | Studio Agatho</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            width: 100vw;
+            height: 100vh;
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .cover-screen-wrapper {
+            max-width: 1200px;
+            width: 100%;
+            padding: 2rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1.35fr;
+            gap: 6rem;
+            align-items: center;
+        }
+
+        /* Left Side: Shield + Sword + LAANCE */
+        .brand-emblem-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .svg-crest {
+            width: 230px;
+            height: 260px;
+            margin-bottom: 1.2rem;
+            filter: drop-shadow(0 15px 35px rgba(212, 175, 55, 0.45));
+        }
+
+        .brand-name-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(3.2rem, 5vw, 4.6rem);
+            font-weight: 900;
+            letter-spacing: 0.22em;
+            color: #ffffff;
+            background: linear-gradient(180deg, #ffffff 40%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .whisker-gold-line {
+            width: 160px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+            margin: 0 auto;
+        }
+
+        /* Right Side: Studio Agatho & "Why Clients Trust Us" */
+        .message-column {
+            max-width: 600px;
+        }
+
+        .studio-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: #ffffff !important;
+            color: #000000 !important;
+            padding: 0.45rem 1.6rem;
+            border-radius: 9999px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            margin-bottom: 1.8rem;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.25);
+        }
+
+        .burst-symbol {
+            font-size: 1.2rem;
+            color: #000000;
+        }
+
+        .sub-tagline {
+            font-size: 0.95rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+        }
+
+        .giant-headline {
+            font-size: clamp(3.6rem, 7vw, 6.2rem);
+            font-weight: 900;
+            line-height: 0.92;
+            letter-spacing: -0.035em;
+            color: #ffffff !important;
+            text-transform: uppercase;
+            margin-bottom: 2.8rem;
+        }
+
+        /* Clean White Pill Button "OPEN" */
+        .btn-open-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            padding: 1.15rem 3.6rem;
+            border-radius: 9999px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 6px 25px rgba(255, 255, 255, 0.25);
+            text-decoration: none;
+        }
+
+        .btn-open-action:hover {
+            background-color: #f0f0f5 !important;
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 10px 35px rgba(255, 255, 255, 0.45);
+        }
+
+        @media (max-width: 1024px) {
+            .cover-screen-wrapper {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                text-align: center;
+            }
+            .studio-pill {
+                margin: 0 auto 1.5rem;
+            }
+            .giant-headline {
+                font-size: 3.5rem;
+            }
+            .btn-open-action {
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cover-screen-wrapper">
+        
+        <!-- Left Side: LAANCE Gold Sword & Heraldic Shield -->
+        <div class="brand-emblem-column">
+            <svg viewBox="0 0 200 240" class="svg-crest">
+                <defs>
+                    <linearGradient id="goldSheen" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#fff0be" />
+                        <stop offset="40%" stop-color="#e2bf55" />
+                        <stop offset="70%" stop-color="#c59f2a" />
+                        <stop offset="100%" stop-color="#8a6912" />
+                    </linearGradient>
+                    <linearGradient id="shieldNavy" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#0e2340" />
+                        <stop offset="100%" stop-color="#040b15" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Outer Gold Shield Frame -->
+                <path d="M100 12 L176 46 V120 C176 180 100 228 100 228 C100 228 24 180 24 120 V46 Z" 
+                      fill="url(#shieldNavy)" stroke="url(#goldSheen)" stroke-width="8" stroke-linejoin="round"/>
+                
+                <!-- Inner Gold Contour Shield -->
+                <path d="M100 30 L160 56 V116 C160 166 100 206 100 206 C100 206 40 166 40 116 V56 Z" 
+                      fill="#061222" stroke="url(#goldSheen)" stroke-width="3"/>
+
+                <!-- Sword Guard, Handle & Pommel -->
+                <circle cx="100" cy="50" r="9" fill="url(#goldSheen)"/>
+                <rect x="94" y="60" width="12" height="18" fill="url(#goldSheen)"/>
+                <path d="M72 78 H128 V86 H72 Z" fill="url(#goldSheen)" rx="3"/>
+
+                <!-- Sword Blade -->
+                <path d="M94 86 H106 V185 L100 198 L94 185 Z" fill="#ffffff"/>
+                <line x1="100" y1="86" x2="100" y2="184" stroke="#a0aec0" stroke-width="2.5"/>
+            </svg>
+
+            <h1 class="brand-name-title">LAANCE</h1>
+            <div class="whisker-gold-line"></div>
+        </div>
+
+        <!-- Right Side: Studio Agatho & "Why Clients Trust Us" -->
+        <div class="message-column">
+            <div class="studio-pill">
+                <span class="burst-symbol">✹</span>
+                <span>STUDIO AGATHO</span>
+            </div>
+
+            <div class="sub-tagline">DESIGN THE FUTURE</div>
+
+            <h2 class="giant-headline">
+                WHY<br>
+                CLIENTS<br>
+                TRUST US
+            </h2>
+
+            <!-- Clicking OPEN navigates directly to the Second Page -->
+            <a href="features.html" class="btn-open-action">
+                OPEN
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin – Manage Menu</title>
+    <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+    <div class="container">
+        <h1>Menu Management</h1>
+        <form id="itemForm">
+            <label for="itemName">Item Name</label>
+            <input type="text" id="itemName" name="name" required />
+
+            <label for="itemDesc">Description</label>
+            <textarea id="itemDesc" name="description" rows="3" required></textarea>
+
+            <label for="itemPrice">Price (₹)</label>
+            <input type="number" id="itemPrice" name="price" step="0.01" required />
+
+            <label for="itemTime">Available Time (e.g., 10:00‑22:00)</label>
+            <input type="text" id="itemTime" name="time" placeholder="HH:MM‑HH:MM" required />
+
+            <label for="itemImage">Image URL</label>
+            <input type="url" id="itemImage" name="image" placeholder="https://..." />
+
+            <button type="submit">Add / Update Item</button>
+        </form>
+        <hr />
+        <h2>Current Menu</h2>
+        <div id="menuList"></div>
+    </div>
+    <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LAANCE | Register & Account Settings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-black: #000000;
+            --bg-card: #121217;
+            --text-white: #ffffff;
+            --text-muted: #9e9ea7;
+            --accent-gold: #d4af37;
+            --accent-gold-bright: #f3ce49;
+            --accent-green: #22c55e;
+            --accent-blue: #3b82f6;
+            --border-dark: rgba(255,255,255,0.10);
+            --font-heading: 'Cinzel', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --radius-pill: 9999px;
+            --radius-card: 20px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg-black); color: var(--text-white); font-family: var(--font-sans); min-height: 100vh; }
+
+        .page-wrap {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        /* Header */
+        .reg-header {
+            text-align: center;
+            padding: 2.5rem 0 2rem;
+        }
+        .reg-header img {
+            width: 100px; height: 100px; object-fit: contain;
+            filter: drop-shadow(0 0 20px rgba(212,175,55,0.3));
+            margin-bottom: 1rem;
+        }
+        .reg-header h1 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--accent-gold);
+            letter-spacing: 0.1em;
+            margin-bottom: 0.3rem;
+        }
+        .reg-header p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        /* Tabs */
+        .tab-bar {
+            display: flex;
+            gap: 0;
+            margin-bottom: 2rem;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-dark);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 0.85rem 1rem;
+            background: rgba(255,255,255,0.03);
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-sans);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold));
+            color: #000;
+        }
+        .tab-btn:not(.active):hover { background: rgba(255,255,255,0.06); color: #fff; }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* Form Card */
+        .form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-card);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .form-card h3 {
+            font-size: 1.05rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .form-card .desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+            letter-spacing: 0.03em;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            background: #1a1a24;
+            border: 1px solid var(--border-dark);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            color: #fff;
+            font-size: 0.9rem;
+            font-family: var(--font-sans);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--accent-gold);
+        }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-group .hint {
+            font-size: 0.72rem;
+            color: #555;
+            margin-top: 0.3rem;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            border-radius: var(--radius-pill);
+            background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold));
+            color: #000;
+            font-weight: 800;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(212,175,55,0.4); }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .btn-outline {
+            display: block;
+            width: 100%;
+            padding: 0.85rem;
+            border-radius: var(--radius-pill);
+            background: transparent;
+            border: 1px solid var(--border-dark);
+            color: #ccc;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.8rem;
+            text-align: center;
+        }
+        .btn-outline:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,0.04); }
+
+        .btn-telegram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            width: 100%;
+            padding: 0.9rem;
+            border-radius: var(--radius-pill);
+            background: #2AABEE;
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.8rem;
+            text-decoration: none;
+        }
+        .btn-telegram:hover { background: #229ED9; transform: translateY(-1px); }
+
+        /* Success State */
+        .success-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(34,197,94,0.3);
+            border-radius: var(--radius-card);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            display: none;
+        }
+        .success-card.show { display: block; }
+        .success-card .icon {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: rgba(34,197,94,0.12);
+            border: 2px solid var(--accent-green);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.2rem;
+        }
+        .success-card h3 { font-size: 1.3rem; color: var(--accent-green); margin-bottom: 0.5rem; }
+        .success-card p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; }
+        .success-card .id-badge {
+            display: inline-block;
+            background: rgba(212,175,55,0.12);
+            border: 1px solid rgba(212,175,55,0.3);
+            color: var(--accent-gold);
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding: 0.6rem 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-card);
+            padding: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        .profile-avatar {
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold));
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; color: #000; font-size: 1.4rem; flex-shrink: 0;
+        }
+        .profile-info h4 { font-size: 1rem; margin-bottom: 0.15rem; }
+        .profile-info p { font-size: 0.82rem; color: var(--text-muted); }
+        .profile-info .badge {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.68rem;
+            font-weight: 700;
+            margin-top: 0.3rem;
+        }
+        .badge-green { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+        .badge-gold { background: rgba(212,175,55,0.15); color: var(--accent-gold-bright); border: 1px solid rgba(212,175,55,0.3); }
+        .badge-red { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1a1a24;
+            border: 1px solid var(--accent-gold);
+            color: #fff;
+            padding: 0.8rem 1.8rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.88rem;
+            font-weight: 600;
+            z-index: 5000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+    <!-- HEADER -->
+    <div class="reg-header">
+        <img src="assets/laance-logo.png" alt="LAANCE" />
+        <h1>LAANCE</h1>
+        <p>Register your account or manage your settings</p>
+    </div>
+
+    <!-- TAB BAR -->
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="showTab('register')" id="tabRegister">📝 Register</button>
+        <button class="tab-btn" onclick="showTab('settings')" id="tabSettings">⚙️ My Settings</button>
+    </div>
+
+    <!-- =================== REGISTER TAB =================== -->
+    <div class="tab-panel active" id="panel-register">
+
+        <div class="form-card" id="registerForm">
+            <h3>📝 Create Your Account</h3>
+            <p class="desc">Fill in your details below. Your Telegram number will be used for notifications and updates.</p>
+
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" id="regName" placeholder="Enter your full name" />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" id="regPhone" placeholder="+91 98XXX XXXXX" />
+                </div>
+                <div class="form-group">
+                    <label>Business / Restaurant Name *</label>
+                    <input type="text" id="regBizName" placeholder="e.g. Royal Spice Restaurant" />
+                    <div class="hint">ഈ name customers-ന് menu page-ൽ കാണും</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Telegram Number / Username *</label>
+                    <input type="text" id="regTelegram" placeholder="@username or +91..." />
+                    <div class="hint">Telegram-ൽ order notifications receive ചെയ്യാൻ</div>
+                </div>
+                <div class="form-group">
+                    <label>Telegram Chat ID *</label>
+                    <input type="text" id="regTelegramChatId" placeholder="e.g. 123456789" inputmode="numeric" />
+                    <div class="hint">Telegram-ൽ <a href="https://t.me/userinfobot" target="_blank" style="color:var(--accent-gold);">@userinfobot</a> message ചെയ്താൽ Chat ID കിട്ടും</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Your Google Sheet Webhook URL (Optional — കസ്റ്റമർ ഓർഡറുകൾ നിങ്ങളുടെ ഷീറ്റിൽ വരാൻ)</label>
+                <input type="url" id="regClientSheet" placeholder="https://script.google.com/macros/s/.../exec" />
+                <div class="hint">നിങ്ങളുടെ റസ്റ്റോറന്റിലെ ഓർഡറുകൾ നിങ്ങളുടെ മാത്രം ഗൂഗിൾ ഷീറ്റിൽ വരണമെങ്കിൽ ഇവിടെ നിങ്ങളുടെ Apps Script URL നൽകാം</div>
+            </div>
+
+            <div class="form-group">
+                <label>Email (Optional)</label>
+                <input type="email" id="regEmail" placeholder="your@email.com" />
+            </div>
+
+            <div class="form-group">
+                <label>Full Address *</label>
+                <textarea id="regAddress" placeholder="House/Building, Street, City, District, State, PIN"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>District / City</label>
+                    <input type="text" id="regCity" placeholder="e.g. Ernakulam" />
+                </div>
+                <div class="form-group">
+                    <label>PIN Code</label>
+                    <input type="text" id="regPin" placeholder="e.g. 682001" maxlength="6" inputmode="numeric" />
+                </div>
+            </div>
+
+            <button class="btn-submit" onclick="submitRegistration()">
+                ✅ Register & Get My ID
+            </button>
+        </div>
+
+        <!-- SUCCESS STATE (hidden initially) -->
+        <div class="success-card" id="regSuccess">
+            <div class="icon">🎉</div>
+            <h3>Registration Successful!</h3>
+            <p>Your account has been created. Save your User ID below:</p>
+            <div class="id-badge" id="regUserIdBadge">USR-0001</div>
+            <p style="margin-top:0.8rem; font-size:0.82rem;">Use this ID to login to your Settings tab anytime.</p>
+            <button class="btn-outline" onclick="goToSettings()" style="margin-top:1.5rem;">
+                ⚙️ Go to My Settings
+            </button>
+        </div>
+    </div>
+
+    <!-- =================== SETTINGS TAB =================== -->
+    <div class="tab-panel" id="panel-settings">
+
+        <!-- Login to Settings -->
+        <div class="form-card" id="settingsLogin">
+            <h3>🔐 Login to Your Account</h3>
+            <p class="desc">Enter your User ID or Phone number to access your settings.</p>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>User ID</label>
+                    <input type="text" id="loginUserId" placeholder="USR-0001" />
+                </div>
+                <div class="form-group">
+                    <label>OR Phone Number</label>
+                    <input type="tel" id="loginPhone" placeholder="+91..." />
+                </div>
+            </div>
+            <button class="btn-submit" onclick="loginToSettings()">
+                🔓 Access My Settings
+            </button>
+        </div>
+
+        <!-- Settings Panel (hidden until login) -->
+        <div id="settingsPanel" style="display:none;">
+
+            <!-- Profile Card -->
+            <div class="profile-card" id="profileCard">
+                <div class="profile-avatar" id="profileAvatar">A</div>
+                <div class="profile-info">
+                    <h4 id="profileName">User Name</h4>
+                    <p id="profileId">USR-0001 · +91 98XXX XXXXX</p>
+                    <span class="badge badge-green" id="profileStatus">Active</span>
+                </div>
+            </div>
+
+            <!-- Update Telegram -->
+            <div class="form-card">
+                <h3>📱 Telegram Settings</h3>
+                <p class="desc">Update your Telegram number or username for receiving notifications.</p>
+                <div class="form-group">
+                    <label>Telegram Number / Username</label>
+                    <input type="text" id="settingsTelegram" placeholder="@username or +91..." />
+                    <div class="hint">ഈ number-ലേക്ക് ആണ് notifications വരുന്നത്</div>
+                </div>
+                <div class="form-group">
+                    <label>Telegram Chat ID</label>
+                    <input type="text" id="settingsTelegramChatId" placeholder="e.g. 123456789" />
+                </div>
+                <button class="btn-submit" onclick="updateTelegram()" style="background:#2AABEE;">
+                    📱 Update Telegram
+                </button>
+            </div>
+
+            <!-- Client's Own Google Sheet for Orders -->
+            <div class="form-card">
+                <h3>📊 Your Google Sheet for Live Orders</h3>
+                <p class="desc">നിങ്ങളുടെ റസ്റ്റോറന്റിലെ കസ്റ്റമർ ഓർഡറുകൾ നിങ്ങളുടെ മാത്രം ഗൂഗിൾ ഷീറ്റിൽ വരാൻ നിങ്ങളുടെ Apps Script Web App URL നൽകുക.</p>
+                <div class="form-group">
+                    <label>Your Google Apps Script Web App URL</label>
+                    <input type="url" id="settingsClientSheet" placeholder="https://script.google.com/macros/s/.../exec" />
+                    <div class="hint">ഓർഡറുകൾ നിങ്ങളുടെ ഷീറ്റിലെ 'Orders' ടാബിലേക്ക് നേരിട്ട് വരും</div>
+                </div>
+                <button class="btn-submit" onclick="updateClientSheet()" style="background:var(--accent-gold); color:#000;">
+                    💾 Save My Google Sheet URL
+                </button>
+            </div>
+
+            <!-- Update Phone -->
+            <div class="form-card">
+                <h3>📞 Update Phone Number</h3>
+                <div class="form-group">
+                    <label>New Phone Number</label>
+                    <input type="tel" id="settingsPhone" placeholder="+91..." />
+                </div>
+                <button class="btn-submit" onclick="updatePhone()" style="background:var(--accent-blue);">
+                    📞 Update Phone
+                </button>
+            </div>
+
+            <!-- Update Address -->
+            <div class="form-card">
+                <h3>📍 Update Address</h3>
+                <div class="form-group">
+                    <label>Full Address</label>
+                    <textarea id="settingsAddress" placeholder="House/Building, Street, City, District, State, PIN"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>District / City</label>
+                        <input type="text" id="settingsCity" placeholder="e.g. Ernakulam" />
+                    </div>
+                    <div class="form-group">
+                        <label>PIN Code</label>
+                        <input type="text" id="settingsPin" placeholder="682001" maxlength="6" />
+                    </div>
+                </div>
+                <button class="btn-submit" onclick="updateAddress()" style="background:var(--accent-green);">
+                    📍 Update Address
+                </button>
+            </div>
+
+            <!-- Account Info -->
+            <div class="form-card">
+                <h3>💳 My Subscription</h3>
+                <div style="display:grid; gap:0.8rem;">
+                    <div style="display:flex; justify-content:space-between; padding:0.6rem 0; border-bottom:1px solid var(--border-dark);">
+                        <span style="color:var(--text-muted); font-size:0.85rem;">Plan</span>
+                        <span style="font-weight:700; font-size:0.9rem;" id="settingsPlan">-</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; padding:0.6rem 0; border-bottom:1px solid var(--border-dark);">
+                        <span style="color:var(--text-muted); font-size:0.85rem;">Amount</span>
+                        <span style="font-weight:700; color:var(--accent-gold); font-size:0.9rem;" id="settingsAmount">-</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; padding:0.6rem 0; border-bottom:1px solid var(--border-dark);">
+                        <span style="color:var(--text-muted); font-size:0.85rem;">Payment Status</span>
+                        <span id="settingsPayStatus">-</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; padding:0.6rem 0; border-bottom:1px solid var(--border-dark);">
+                        <span style="color:var(--text-muted); font-size:0.85rem;">Invoice #</span>
+                        <span style="font-family:var(--font-mono); font-size:0.85rem;" id="settingsInvoice">-</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; padding:0.6rem 0;">
+                        <span style="color:var(--text-muted); font-size:0.85rem;">Member Since</span>
+                        <span style="font-size:0.85rem;" id="settingsJoined">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-outline" onclick="logoutSettings()">
+                🔒 Logout
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+    const DEFAULT_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwog9q_MHyhwRbHyEik4D1M9mmGoYXsgkGZxZ4iJuSO31MwCbdPwgOL8WQDLXS8g9uY8w/exec';
+    let currentUser = null;
+
+    function showTab(tab) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('panel-' + tab).classList.add('active');
+        document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // ---- REGISTRATION ----
+    function submitRegistration() {
+        const name = document.getElementById('regName').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const bizName = (document.getElementById('regBizName')?.value || '').trim();
+        const telegram = document.getElementById('regTelegram').value.trim();
+        const telegramChatId = (document.getElementById('regTelegramChatId')?.value || '').trim();
+        const clientSheet = (document.getElementById('regClientSheet')?.value || '').trim();
+        const address = document.getElementById('regAddress').value.trim();
+
+        if (!name) { alert('Name is required!'); return; }
+        if (!phone) { alert('Phone number is required!'); return; }
+        if (!telegram) { alert('Telegram number/username is required!'); return; }
+        if (!address) { alert('Address is required!'); return; }
+
+        const email = document.getElementById('regEmail').value.trim();
+        const city = document.getElementById('regCity').value.trim();
+        const pin = document.getElementById('regPin').value.trim();
+
+        // Load existing users
+        const users = JSON.parse(localStorage.getItem('laance_saas_users')) || [];
+
+        // Check duplicate phone
+        if (users.find(u => u.phone === phone)) {
+            alert('This phone number is already registered! Go to Settings tab to update your details.');
+            return;
+        }
+
+        // Generate User ID
+        const nextNum = users.length + 1;
+        const userId = 'USR-' + String(nextNum).padStart(4, '0');
+
+        const newUser = {
+            id: userId,
+            name: name,
+            businessName: bizName || name,
+            phone: phone,
+            telegram: telegram,
+            telegramChatId: telegramChatId,
+            clientGoogleSheetUrl: clientSheet,
+            email: email,
+            address: address,
+            city: city,
+            pin: pin,
+            planId: '',
+            planName: '-',
+            amount: 0,
+            discount: 0,
+            finalAmount: 0,
+            paymentStatus: 'Pending',
+            status: 'Pending',
+            invoiceNo: '',
+            joinedAt: new Date().toISOString()
+        };
+
+        users.unshift(newUser);
+        localStorage.setItem('laance_saas_users', JSON.stringify(users));
+
+        // Log activity
+        const log = JSON.parse(localStorage.getItem('laance_activity_log')) || [];
+        log.unshift({
+            time: new Date().toLocaleString('en-IN', { hour:'2-digit', minute:'2-digit', day:'2-digit', month:'short' }),
+            action: 'New Registration',
+            user: name,
+            details: `${userId} · Biz: ${bizName || name} · Phone: ${phone} · Telegram: ${telegram}`
+        });
+        localStorage.setItem('laance_activity_log', JSON.stringify(log));
+
+        // Sync to Google Sheet
+        const settings = JSON.parse(localStorage.getItem('laance_owner_settings')) || {};
+        const sheetUrl = settings.googleSheetUrl || DEFAULT_GOOGLE_SHEET_URL;
+        if (sheetUrl) {
+            try {
+                fetch(sheetUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        type: 'new_registration',
+                        data: newUser,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+            } catch(e) { console.log('Sheet sync error:', e); }
+        }
+
+        // Show success with Client links
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('regSuccess').classList.add('show');
+        document.getElementById('regUserIdBadge').textContent = userId;
+
+        // Add client links in success screen
+        const successBox = document.getElementById('regSuccess');
+        const origin = window.location.origin || 'http://localhost:8000';
+        const clientMenuUrl = `${origin}/customer-dine.html?client=${userId}&table=1`;
+        const clientKitchenUrl = `${origin}/live-operations.html?client=${userId}`;
+
+        const linksContainer = document.getElementById('clientLinksBox');
+        if (!linksContainer) {
+            const div = document.createElement('div');
+            div.id = 'clientLinksBox';
+            div.style.cssText = 'background:#1a1a24; border:1px solid rgba(212,175,55,0.3); border-radius:12px; padding:1.2rem; margin:1.2rem 0; text-align:left; font-size:0.85rem;';
+            div.innerHTML = `
+                <div style="font-weight:800; color:var(--accent-gold); margin-bottom:0.6rem;">🔗 YOUR DEDICATED SAAS RESTAURANT LINKS:</div>
+                <div style="margin-bottom:0.8rem;">
+                    <div style="color:#aaa; font-size:0.75rem;">🍽️ Customer Dine-in QR Menu Link:</div>
+                    <a href="${clientMenuUrl}" target="_blank" style="color:#60a5fa; word-break:break-all; font-family:var(--font-mono); font-size:0.8rem;">${clientMenuUrl}</a>
+                </div>
+                <div>
+                    <div style="color:#aaa; font-size:0.75rem;">👨‍🍳 Live Kitchen Order Screen (Your Orders Only):</div>
+                    <a href="${clientKitchenUrl}" target="_blank" style="color:#4ade80; word-break:break-all; font-family:var(--font-mono); font-size:0.8rem;">${clientKitchenUrl}</a>
+                </div>
+            `;
+            successBox.insertBefore(div, successBox.querySelector('button'));
+        }
+
+        currentUser = newUser;
+    }
+
+    function goToSettings() {
+        showTab('settings');
+        if (currentUser) {
+            document.getElementById('settingsLogin').style.display = 'none';
+            document.getElementById('settingsPanel').style.display = 'block';
+            loadUserProfile(currentUser);
+        }
+    }
+
+    // ---- SETTINGS LOGIN ----
+    function loginToSettings() {
+        const userId = document.getElementById('loginUserId').value.trim().toUpperCase();
+        const phone = document.getElementById('loginPhone').value.trim();
+
+        if (!userId && !phone) { alert('Enter your User ID or Phone number!'); return; }
+
+        const users = JSON.parse(localStorage.getItem('laance_saas_users')) || [];
+        let user = null;
+
+        if (userId) {
+            user = users.find(u => u.id === userId);
+        }
+        if (!user && phone) {
+            user = users.find(u => u.phone === phone);
+        }
+
+        if (!user) {
+            alert('User not found! Check your ID or phone number, or Register first.');
+            return;
+        }
+
+        currentUser = user;
+        document.getElementById('settingsLogin').style.display = 'none';
+        document.getElementById('settingsPanel').style.display = 'block';
+        loadUserProfile(user);
+        showToast('✅ Welcome back, ' + user.name + '!');
+    }
+
+    function loadUserProfile(user) {
+        document.getElementById('profileAvatar').textContent = user.name.charAt(0).toUpperCase();
+        document.getElementById('profileName').textContent = user.name;
+        document.getElementById('profileId').textContent = `${user.id} · ${user.phone}`;
+
+        const statusEl = document.getElementById('profileStatus');
+        statusEl.textContent = user.status || 'Pending';
+        statusEl.className = 'badge ' + (user.status === 'Active' ? 'badge-green' : user.status === 'Expired' ? 'badge-red' : 'badge-gold');
+
+        document.getElementById('settingsTelegram').value = user.telegram || '';
+        if (document.getElementById('settingsTelegramChatId')) document.getElementById('settingsTelegramChatId').value = user.telegramChatId || '';
+        if (document.getElementById('settingsClientSheet')) document.getElementById('settingsClientSheet').value = user.clientGoogleSheetUrl || '';
+        document.getElementById('settingsPhone').value = user.phone || '';
+        document.getElementById('settingsAddress').value = user.address || '';
+        document.getElementById('settingsCity').value = user.city || '';
+        document.getElementById('settingsPin').value = user.pin || '';
+
+        document.getElementById('settingsPlan').textContent = user.planName || '-';
+        document.getElementById('settingsAmount').textContent = user.finalAmount ? '₹' + user.finalAmount.toLocaleString('en-IN') : '-';
+
+        const payEl = document.getElementById('settingsPayStatus');
+        payEl.innerHTML = user.paymentStatus === 'Paid'
+            ? '<span class="badge badge-green">✅ Paid</span>'
+            : '<span class="badge badge-red">⏳ Pending</span>';
+
+        document.getElementById('settingsInvoice').textContent = user.invoiceNo || '-';
+        document.getElementById('settingsJoined').textContent = user.joinedAt
+            ? new Date(user.joinedAt).toLocaleDateString('en-IN', { day:'2-digit', month:'long', year:'numeric' })
+            : '-';
+    }
+
+    function updateTelegram() {
+        if (!currentUser) return;
+        const newTg = document.getElementById('settingsTelegram').value.trim();
+        const newChatId = (document.getElementById('settingsTelegramChatId')?.value || '').trim();
+        if (!newTg) { alert('Enter a Telegram number or username!'); return; }
+
+        updateUserField('telegram', newTg);
+        if (newChatId) updateUserField('telegramChatId', newChatId);
+        showToast('📱 Telegram details updated: ' + newTg);
+    }
+
+    function updateClientSheet() {
+        if (!currentUser) return;
+        const sheetUrl = (document.getElementById('settingsClientSheet')?.value || '').trim();
+        updateUserField('clientGoogleSheetUrl', sheetUrl);
+        showToast('💾 Restaurant Google Sheet URL saved!');
+    }
+
+    function updatePhone() {
+        if (!currentUser) return;
+        const newPhone = document.getElementById('settingsPhone').value.trim();
+        if (!newPhone) { alert('Enter a phone number!'); return; }
+
+        updateUserField('phone', newPhone);
+        document.getElementById('profileId').textContent = `${currentUser.id} · ${newPhone}`;
+        showToast('📞 Phone number updated!');
+    }
+
+    function updateAddress() {
+        if (!currentUser) return;
+        const addr = document.getElementById('settingsAddress').value.trim();
+        const city = document.getElementById('settingsCity').value.trim();
+        const pin = document.getElementById('settingsPin').value.trim();
+
+        const users = JSON.parse(localStorage.getItem('laance_saas_users')) || [];
+        const idx = users.findIndex(u => u.id === currentUser.id);
+        if (idx === -1) return;
+
+        users[idx].address = addr;
+        users[idx].city = city;
+        users[idx].pin = pin;
+        currentUser = users[idx];
+
+        localStorage.setItem('laance_saas_users', JSON.stringify(users));
+        syncUserUpdate(users[idx]);
+        showToast('📍 Address updated!');
+    }
+
+    function updateUserField(field, value) {
+        const users = JSON.parse(localStorage.getItem('laance_saas_users')) || [];
+        const idx = users.findIndex(u => u.id === currentUser.id);
+        if (idx === -1) return;
+
+        users[idx][field] = value;
+        currentUser = users[idx];
+        localStorage.setItem('laance_saas_users', JSON.stringify(users));
+        syncUserUpdate(users[idx]);
+    }
+
+    function syncUserUpdate(user) {
+        const settings = JSON.parse(localStorage.getItem('laance_owner_settings')) || {};
+        const sheetUrl = settings.googleSheetUrl || DEFAULT_GOOGLE_SHEET_URL;
+        if (sheetUrl) {
+            try {
+                fetch(sheetUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        type: 'user_update',
+                        data: user,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+            } catch(e) { console.log('Sheet sync error:', e); }
+        }
+
+        // Log
+        const log = JSON.parse(localStorage.getItem('laance_activity_log')) || [];
+        log.unshift({
+            time: new Date().toLocaleString('en-IN', { hour:'2-digit', minute:'2-digit', day:'2-digit', month:'short' }),
+            action: 'User Updated',
+            user: user.name,
+            details: `${user.id} updated their profile`
+        });
+        localStorage.setItem('laance_activity_log', JSON.stringify(log));
+    }
+
+    function logoutSettings() {
+        currentUser = null;
+        document.getElementById('settingsPanel').style.display = 'none';
+        document.getElementById('settingsLogin').style.display = 'block';
+        document.getElementById('loginUserId').value = '';
+        document.getElementById('loginPhone').value = '';
+        showToast('🔒 Logged out');
+    }
+</script>
+</body>
+</html>

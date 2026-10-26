@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LAANCE SaaS | Menu Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-black: #000000;
+            --bg-card: #121217;
+            --text-white: #ffffff;
+            --text-muted: #9e9ea7;
+            --accent-gold: #d4af37;
+            --accent-gold-bright: #f3ce49;
+            --border-dark: rgba(255, 255, 255, 0.12);
+            --font-heading: 'Cinzel', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --radius-pill: 9999px;
+            --radius-card: 20px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: var(--font-sans);
+            min-height: 100vh;
+        }
+
+        .top-navbar {
+            background: rgba(10, 10, 14, 0.95);
+            border-bottom: 1px solid var(--border-dark);
+            padding: 1rem 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: #ffffff;
+        }
+        .nav-brand .crest { font-size: 1.4rem; }
+        .nav-brand .brand { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 800; color: var(--accent-gold); }
+        .nav-brand .sub { font-size: 0.65rem; color: #888; letter-spacing: 0.2em; }
+
+        .btn-pill-sm {
+            padding: 0.5rem 1.4rem;
+            border-radius: var(--radius-pill);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-outline { background: transparent; border: 1px solid var(--border-dark); color: #ccc; }
+        .btn-outline:hover { color: #fff; border-color: #fff; }
+        .btn-gold { background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold)); color: #000; }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4); }
+
+        .container {
+            max-width: 1360px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem 5rem;
+        }
+
+        .page-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-dark);
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .step-tag { font-size: 0.75rem; letter-spacing: 0.25em; color: var(--accent-gold); font-weight: 800; display: block; margin-bottom: 0.3rem; }
+        .page-title { font-family: var(--font-heading); font-size: 2.2rem; color: #fff; }
+
+        .builder-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.35fr;
+            gap: 2.5rem;
+        }
+
+        .editor-card, .catalog-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-card);
+            padding: 2.2rem;
+        }
+
+        .card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-dark);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-head h3 { font-size: 1.25rem; color: var(--accent-gold); }
+
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: #e2e2e8; margin-bottom: 0.4rem; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            background: #1c1c24;
+            border: 1px solid var(--border-dark);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.92rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--accent-gold);
+        }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .presets-row { display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem; flex-wrap: wrap; }
+        .presets-row span { font-size: 0.75rem; color: #888; }
+        .chip {
+            background: #22222a;
+            color: #ddd;
+            border: 1px solid var(--border-dark);
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .chip:hover { background: #fff; color: #000; }
+
+        .btn-submit-dish {
+            width: 100%;
+            background: #ffffff;
+            color: #000;
+            padding: 0.9rem;
+            border-radius: var(--radius-pill);
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: all 0.2s;
+        }
+        .btn-submit-dish:hover { background: #e5e5ea; transform: translateY(-2px); }
+
+        .catalog-stream {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 580px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .dish-item-row {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            background: #17171e;
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.2s;
+        }
+        .dish-item-row:hover { border-color: rgba(255,255,255,0.25); }
+
+        .dish-thumb { width: 75px; height: 75px; border-radius: 8px; object-fit: cover; }
+        .dish-info { flex-grow: 1; }
+        .dish-info h4 { font-size: 1.05rem; color: #fff; margin-bottom: 0.2rem; }
+        .dish-info .meta { font-size: 0.8rem; color: #888; }
+        .dish-info .price { font-weight: 700; color: var(--accent-gold); font-size: 0.95rem; }
+
+        .dish-ctrls { display: flex; gap: 0.5rem; }
+        .btn-ctrl {
+            background: #24242e;
+            color: #fff;
+            border: none;
+            padding: 0.45rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            cursor: pointer;
+        }
+        .btn-ctrl:hover { background: #fff; color: #000; }
+
+        @media (max-width: 900px) {
+            .builder-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-navbar">
+        <a href="index.html" class="nav-brand">
+            <span class="crest">⚔️</span>
+            <div>
+                <span class="brand">LAANCE</span>
+                <span class="sub">STUDIO AGATHO</span>
+            </div>
+        </a>
+
+        <div style="display:flex; gap:1rem; align-items:center;">
+            <a href="dashboard.html" class="btn-pill-sm btn-outline">🎛️ Control Hub</a>
+            <a href="qr-studio.html" class="btn-pill-sm btn-gold">Next: Generate QR Codes &rarr;</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header-row">
+            <div>
+                <span class="step-tag">STEP 2 OF 5 &middot; MENU CATALOG BUILDER</span>
+                <h1 class="page-title">Add &amp; Edit Food Delicacies</h1>
+                <p style="color:#888; margin-top:0.3rem;">Upload dish photos, describe notes, set serving time windows, prices, and stock status.</p>
+            </div>
+            <div>
+                <a href="qr-studio.html" class="btn-pill-sm btn-gold">
+                    Done Adding! Generate QR Codes &rarr;
+                </a>
+            </div>
+        </div>
+
+        <div class="builder-grid">
+            
+            <!-- Editor Form -->
+            <div class="editor-card">
+                <div class="card-head">
+                    <h3 id="formTitle">Add New Food Item</h3>
+                    <button type="button" class="chip" onclick="resetForm()">+ New Dish</button>
+                </div>
+
+                <form onsubmit="handleDishSubmit(event)">
+                    <input type="hidden" id="dishId" value="" />
+
+                    <div class="form-group">
+                        <label>Food Item Name</label>
+                        <input type="text" id="dishName" placeholder="e.g. Soupe à l'Oignon Gratinée" required />
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="dishCategory" required>
+                                <option value="Appetizers">Mouthwatering Appetizers</option>
+                                <option value="Mains">Wholesome Mains</option>
+                                <option value="Desserts">Sweet Endings</option>
+                                <option value="Drinks">French Beverages</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Price (₹)</label>
+                            <input type="number" id="dishPrice" placeholder="490" required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Serving Time Window</label>
+                            <input type="text" id="dishTime" placeholder="11:00 AM - 11:30 PM" value="11:00 AM - 11:30 PM" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Stock Status</label>
+                            <select id="dishStatus">
+                                <option value="Available">Available (In Stock)</option>
+                                <option value="Sold Out">Sold Out</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Food Photo URL</label>
+                        <input type="url" id="dishPhoto" placeholder="https://images.unsplash.com/..." required />
+                        <div class="presets-row">
+                            <span>Presets:</span>
+                            <button type="button" class="chip" onclick="setPreset('appetizer')">Appetizer</button>
+                            <button type="button" class="chip" onclick="setPreset('main')">Steak Main</button>
+                            <button type="button" class="chip" onclick="setPreset('dessert')">Canelés</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dish Description</label>
+                        <textarea id="dishDesc" rows="3" placeholder="Caramelized sweet onion broth, aged Gruyère crust, organic herbs..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit-dish">Save Food Item</button>
+                </form>
+            </div>
+
+            <!-- Live Catalog List -->
+            <div class="catalog-card">
+                <div class="card-head">
+                    <h3>Current Menu (<span id="countBadge">0</span> Items)</h3>
+                    <span style="color:#10b981; font-size:0.8rem; font-weight:700;">● Live Sync Ready</span>
+                </div>
+                <div id="catalogList" class="catalog-stream">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const DEFAULT_DISHES = [
+            {
+                id: "DISH-01",
+                name: "Soupe à l'Oignon Gratinée",
+                category: "Appetizers",
+                price: 490,
+                time: "11:00 AM - 11:30 PM",
+                status: "Available",
+                image: "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=800&q=80",
+                desc: "Classic Parisian caramelized onion broth topped with crusty sourdough and melted golden Gruyère cheese."
+            },
+            {
+                id: "DISH-02",
+                name: "Canard Rôti au Jus (Duck Breast)",
+                category: "Mains",
+                price: 1150,
+                time: "12:30 PM - 11:00 PM",
+                status: "Available",
+                image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+                desc: "Pan-seared tender duck breast with crispy skin, roasted thyme baby potatoes, and natural savory jus."
+            },
+            {
+                id: "DISH-03",
+                name: "Canelés Bordelais Caramélisés",
+                category: "Desserts",
+                price: 380,
+                time: "All Day",
+                status: "Available",
+                image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80",
+                desc: "Traditional fluted pastry from Bordeaux with deeply caramelized exterior and delicate vanilla-rum custard interior."
+            },
+            {
+                id: "DISH-04",
+                name: "Café Crème & Almond Macarons",
+                category: "Drinks",
+                price: 320,
+                time: "All Day",
+                status: "Available",
+                image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80",
+                desc: "Rich double-shot Parisian espresso with steamed microfoam, served with two artisanal almond macarons."
+            }
+        ];
+
+        let dishes = JSON.parse(localStorage.getItem('laance_dishes')) || DEFAULT_DISHES;
+
+        function renderCatalog() {
+            document.getElementById('countBadge').textContent = dishes.length;
+            const container = document.getElementById('catalogList');
+            container.innerHTML = dishes.map(d => `
+                <div class="dish-item-row">
+                    <img class="dish-thumb" src="${d.image}" alt="${d.name}" />
+                    <div class="dish-info">
+                        <h4>${d.name}</h4>
+                        <div class="meta">${d.category} &middot; ⏰ ${d.time} &middot; ${d.status}</div>
+                        <div class="price">₹${d.price}</div>
+                    </div>
+                    <div class="dish-ctrls">
+                        <button class="btn-ctrl" onclick="editDish('${d.id}')">✏️ Edit</button>
+                        <button class="btn-ctrl" onclick="deleteDish('${d.id}')">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleDishSubmit(e) {
+            e.preventDefault();
+            const editId = document.getElementById('dishId').value;
+            const item = {
+                id: editId || 'DISH-' + Math.floor(10 + Math.random() * 90),
+                name: document.getElementById('dishName').value.trim(),
+                category: document.getElementById('dishCategory').value,
+                price: parseFloat(document.getElementById('dishPrice').value),
+                time: document.getElementById('dishTime').value.trim(),
+                status: document.getElementById('dishStatus').value,
+                image: document.getElementById('dishPhoto').value.trim(),
+                desc: document.getElementById('dishDesc').value.trim()
+            };
+
+            if (editId) {
+                const idx = dishes.findIndex(d => d.id === editId);
+                if (idx !== -1) dishes[idx] = item;
+            } else {
+                dishes.unshift(item);
+            }
+
+            localStorage.setItem('laance_dishes', JSON.stringify(dishes));
+            resetForm();
+            renderCatalog();
+        }
+
+        function editDish(id) {
+            const d = dishes.find(x => x.id === id);
+            if (!d) return;
+            document.getElementById('dishId').value = d.id;
+            document.getElementById('dishName').value = d.name;
+            document.getElementById('dishCategory').value = d.category;
+            document.getElementById('dishPrice').value = d.price;
+            document.getElementById('dishTime').value = d.time;
+            document.getElementById('dishStatus').value = d.status;
+            document.getElementById('dishPhoto').value = d.image;
+            document.getElementById('dishDesc').value = d.desc;
+            document.getElementById('formTitle').textContent = `Editing: ${d.name}`;
+        }
+
+        function deleteDish(id) {
+            if (confirm('Delete this food item from the menu?')) {
+                dishes = dishes.filter(x => x.id !== id);
+                localStorage.setItem('laance_dishes', JSON.stringify(dishes));
+                renderCatalog();
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('dishId').value = '';
+            document.getElementById('dishName').value = '';
+            document.getElementById('dishPrice').value = '';
+            document.getElementById('dishPhoto').value = '';
+            document.getElementById('dishDesc').value = '';
+            document.getElementById('formTitle').textContent = 'Add New Food Item';
+        }
+
+        function setPreset(type) {
+            const input = document.getElementById('dishPhoto');
+            if (type === 'appetizer') input.value = "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=800&q=80";
+            if (type === 'main') input.value = "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80";
+            if (type === 'dessert') input.value = "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=800&q=80";
+        }
+
+        document.addEventListener('DOMContentLoaded', renderCatalog);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LAANCE SaaS | Live Google Sheets & WhatsApp Operations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-black: #000000;
+            --bg-card: #121217;
+            --bg-card-alt: #181820;
+            --text-white: #ffffff;
+            --text-muted: #9e9ea7;
+            --accent-gold: #d4af37;
+            --accent-gold-bright: #f3ce49;
+            --accent-green: #22c55e;
+            --accent-green-dark: #15803d;
+            --border-dark: rgba(255, 255, 255, 0.12);
+            --font-heading: 'Cinzel', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --radius-pill: 9999px;
+            --radius-card: 20px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: var(--font-sans);
+            min-height: 100vh;
+        }
+
+        .top-navbar {
+            background: rgba(10, 10, 14, 0.95);
+            border-bottom: 1px solid var(--border-dark);
+            padding: 1rem 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: #ffffff;
+        }
+        .nav-brand .crest { font-size: 1.4rem; }
+        .nav-brand .brand { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 800; color: var(--accent-gold); }
+        .nav-brand .sub { font-size: 0.65rem; color: #888; letter-spacing: 0.2em; }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-pill-sm {
+            padding: 0.5rem 1.3rem;
+            border-radius: var(--radius-pill);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-outline { background: transparent; border: 1px solid var(--border-dark); color: #ccc; }
+        .btn-outline:hover { color: #fff; border-color: #fff; background: rgba(255,255,255,0.05); }
+        .btn-gold { background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold)); color: #000; }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4); }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 10px 35px rgba(255,122,24,0.6); }
+            100% { transform: scale(1.015); box-shadow: 0 14px 50px rgba(255,122,24,0.85); }
+        }
+        @keyframes newRowFlash {
+            0% { background: rgba(255,122,24,0.25); }
+            50% { background: rgba(255,122,24,0.08); }
+            100% { background: rgba(212,175,55,0.06); }
+        }
+        .new-order-row {
+            animation: newRowFlash 1.5s ease-out 3;
+        }
+        .btn-green { background: #22c55e; color: #000; font-weight: 800; }
+        .btn-green:hover { background: #16a34a; color: #fff; }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem 5rem;
+        }
+
+        .page-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-dark);
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .step-tag { font-size: 0.75rem; letter-spacing: 0.25em; color: var(--accent-gold); font-weight: 800; display: block; margin-bottom: 0.3rem; }
+        .page-title { font-family: var(--font-heading); font-size: 2.2rem; color: #fff; }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: 16px;
+            padding: 1.4rem 1.6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .stat-card .label { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 800; color: #fff; font-family: var(--font-mono); }
+        .stat-card .sub { font-size: 0.78rem; color: var(--accent-gold); display: flex; align-items: center; gap: 0.3rem; }
+
+        /* Operations Layout */
+        .operations-layout {
+            display: grid;
+            grid-template-columns: 1.7fr 1fr;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        @media (max-width: 1080px) {
+            .operations-layout { grid-template-columns: 1fr; }
+        }
+
+        /* Google Sheet Card */
+        .sheet-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-card);
+            overflow: hidden;
+        }
+
+        .sheet-top-bar {
+            background: #0f2d1e;
+            border-bottom: 1px solid rgba(34, 197, 94, 0.3);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .sheet-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .sheet-icon {
+            width: 32px;
+            height: 32px;
+            background: #107c41;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .sheet-titles h4 {
+            font-size: 1rem;
+            color: #fff;
+            font-weight: 700;
+        }
+        .sheet-titles span {
+            font-size: 0.75rem;
+            color: #86efac;
+        }
+
+        .sheet-actions {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .btn-sheet-action {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 0.35rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-sheet-action:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Sheet Table */
+        .sheet-table-wrap {
+            overflow-x: auto;
+            max-height: 520px;
+        }
+
+        .sheet-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            text-align: left;
+        }
+
+        .sheet-table th {
+            background: #191922;
+            color: #9e9ea7;
+            padding: 0.85rem 1rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-dark);
+            border-right: 1px solid rgba(255,255,255,0.06);
+            white-space: nowrap;
+        }
+
+        .sheet-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-right: 1px solid rgba(255,255,255,0.04);
+            white-space: nowrap;
+        }
+
+        .sheet-table tr:hover {
+            background: rgba(212, 175, 55, 0.04);
+        }
+
+        .pill-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .pill-active { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .pill-green { background: rgba(34, 197, 94, 0.25); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.5); }
+        .pill-table { background: rgba(212, 175, 55, 0.15); color: var(--accent-gold-bright); border: 1px solid rgba(212, 175, 55, 0.3); font-weight: 800; }
+
+        /* WhatsApp Dispatcher Column */
+        .wa-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .phone-mockup {
+            background: #111b21;
+            border: 2px solid #222d34;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        .phone-header {
+            background: #202c33;
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border-bottom: 1px solid #2a3942;
+        }
+
+        .phone-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #000;
+            font-size: 1.1rem;
+        }
+
+        .phone-user-info h5 {
+            font-size: 0.95rem;
+            color: #e9edef;
+            font-weight: 700;
+        }
+        .phone-user-info span {
+            font-size: 0.72rem;
+            color: #8696a0;
+        }
+
+        .phone-chat-body {
+            background-color: #0c1317;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 0);
+            background-size: 20px 20px;
+            padding: 1.2rem;
+            max-height: 380px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-bubble {
+            background: #005c4b;
+            color: #e9edef;
+            padding: 0.85rem 1rem;
+            border-radius: 12px 12px 2px 12px;
+            max-width: 92%;
+            align-self: flex-end;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-size: 0.82rem;
+            line-height: 1.45;
+            position: relative;
+        }
+
+        .bubble-time {
+            font-size: 0.65rem;
+            color: #8696a0;
+            text-align: right;
+            margin-top: 0.3rem;
+            display: block;
+        }
+
+        .btn-open-wa {
+            display: block;
+            margin-top: 0.6rem;
+            background: #25d366;
+            color: #000;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.78rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .btn-open-wa:hover {
+            background: #1ebd5b;
+        }
+
+        /* 12 AM Midnight Automation Card */
+        .midnight-card {
+            background: linear-gradient(135deg, #181824 0%, #0d0d15 100%);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-card);
+            padding: 1.8rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .midnight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-gold), #818cf8);
+        }
+
+        .midnight-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .midnight-card p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .report-preview-box {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: #a7f3d0;
+            line-height: 1.5;
+            margin-bottom: 1.2rem;
+            white-space: pre-wrap;
+        }
+
+        .action-bottom-bar {
+            margin-top: 3.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAVBAR -->
+    <header class="top-navbar">
+        <a href="index.html" class="nav-brand">
+            <span class="crest">⚔️</span>
+            <div>
+                <div class="brand">LAANCE</div>
+                <div class="sub">STUDIO AGATHO SAAS</div>
+            </div>
+        </a>
+
+        <div class="nav-actions">
+            <a href="dashboard.html" class="btn-pill-sm btn-gold">🎛️ Control Hub</a>
+            <a href="customer-dine.html" class="btn-pill-sm btn-outline">🍽️ + Dine-in Order</a>
+            <a href="qr-studio.html" class="btn-pill-sm btn-outline">🔲 Table QR Studio</a>
+            <a href="menu-builder.html" class="btn-pill-sm btn-outline">📋 Menu Builder</a>
+            <a href="login.html" class="btn-pill-sm btn-outline">🔒 Logout</a>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- HEADER ROW -->
+        <div class="page-header-row">
+            <div>
+                <span class="step-tag">STAGE 5 OF 5 • LIVE KITCHEN &amp; LEDGER OPERATIONS</span>
+                <h1 class="page-title">Live Kitchen Screen &amp; Sheets Dispatcher</h1>
+            </div>
+            <div style="display:flex; gap:0.8rem; align-items:center; flex-wrap:wrap;">
+                <button class="btn-pill-sm btn-gold" id="btnSoundToggle" onclick="toggleKitchenSound()">
+                    🔔 Sound Alert: ON
+                </button>
+                <span id="pusherStatusBadge" style="display:inline-flex; align-items:center; gap:0.4rem; background:rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.3); color:#4ade80; padding:0.35rem 0.85rem; border-radius:9999px; font-size:0.75rem; font-weight:700; letter-spacing:0.03em;">
+                    <span style="width:8px; height:8px; border-radius:50%; background:#22c55e; display:inline-block; animation: pulse 2s infinite;"></span>
+                    PUSHER LIVE
+                </span>
+                <button class="btn-pill-sm btn-outline" onclick="playOrderChime(true)">
+                    🔊 Test Order Chime
+                </button>
+                <button class="btn-pill-sm btn-green" onclick="simulateNewOrder()">⚡ Simulate Live QR Order</button>
+                <button class="btn-pill-sm btn-outline" onclick="clearLedger()">🗑️ Reset</button>
+            </div>
+        </div>
+
+        <!-- REAL-TIME INCOMING ORDER ALERT BANNER -->
+        <div id="liveOrderAlertBanner" style="display:none; background:linear-gradient(135deg, #ff7a18, #d4af37); color:#000; font-weight:900; padding:1.1rem 2rem; border-radius:14px; margin-bottom:1.8rem; box-shadow:0 10px 35px rgba(255,122,24,0.6); align-items:center; justify-content:space-between; animation:pulse 0.8s infinite alternate;">
+            <div style="display:flex; align-items:center; gap:1rem;">
+                <span style="font-size:2rem;">🚨</span>
+                <div>
+                    <div style="font-size:1.1rem; text-transform:uppercase; letter-spacing:0.05em;" id="alertBannerTitle">NEW INCOMING ORDER DETECTED!</div>
+                    <div style="font-size:0.88rem; font-weight:700; color:#1a1a24;" id="alertBannerSubtitle">Table 01 &middot; 2 Items &middot; ₹1,450.00</div>
+                </div>
+            </div>
+            <div style="display:flex; gap:0.6rem;">
+                <button type="button" class="btn-pill-sm btn-outline" style="background:#000; color:#fff; border:none; padding:0.5rem 1.2rem;" onclick="dismissAlertBanner()">Dismiss</button>
+            </div>
+        </div>
+
+        <!-- STATS BAR -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="label">Total Orders Today</span>
+                <span class="value" id="statOrdersCount">0</span>
+                <span class="sub">🟢 Real-time Sheet Sync</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">Daily Gross Revenue</span>
+                <span class="value" id="statRevenue">₹0.00</span>
+                <span class="sub">💰 Calculated Automatically</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">Loyalty Points Earned</span>
+                <span class="value" id="statPoints">0 pts</span>
+                <span class="sub">🎁 ₹100 = 1 Point</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">Target WhatsApp</span>
+                <span class="value" style="font-size:1.25rem;" id="statWhatsApp">+91 98460 12345</span>
+                <span class="sub">📲 Owner Direct Alerts</span>
+            </div>
+        </div>
+
+        <!-- OPERATIONS LAYOUT -->
+        <div class="operations-layout">
+
+            <!-- LEFT: GOOGLE SHEET MIRROR -->
+            <div class="sheet-card">
+                <div class="sheet-top-bar">
+                    <div class="sheet-info">
+                        <div class="sheet-icon">X</div>
+                        <div class="sheet-titles">
+                            <h4>Google Sheets Database Mirror</h4>
+                            <span>📁 LAANCE_Cloud_Storage > 📊 Restaurant_Orders_Ledger.xlsx</span>
+                        </div>
+                    </div>
+                    <div class="sheet-actions">
+                        <button class="btn-sheet-action" onclick="exportCSV()">📥 Export .CSV</button>
+                        <button class="btn-sheet-action" onclick="renderTable()">🔄 Sync Now</button>
+                    </div>
+                </div>
+
+                <div class="sheet-table-wrap">
+                    <table class="sheet-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Order ID</th>
+                                <th>Table</th>
+                                <th>Customer Mobile</th>
+                                <th>Items Ordered</th>
+                                <th>Total (₹)</th>
+                                <th>Points</th>
+                                <th>Order Time</th>
+                                <th>Status</th>
+                                <th>Kitchen Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sheetBody">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- RIGHT: WHATSAPP DISPATCH & MIDNIGHT 12 AM REPORT -->
+            <div class="wa-column">
+
+                <!-- WhatsApp Smartphone Mockup -->
+                <div class="phone-mockup">
+                    <div class="phone-header">
+                        <div class="phone-avatar">L</div>
+                        <div class="phone-user-info">
+                            <h5 id="waOwnerName">LAANCE Bot ➜ Restaurant Owner</h5>
+                            <span>● Instant Order Dispatcher</span>
+                        </div>
+                    </div>
+
+                    <div class="phone-chat-body" id="chatFeed">
+                        <!-- Chat bubbles injected by JS -->
+                    </div>
+                </div>
+
+                <!-- 12 AM Midnight Daily Report Card -->
+                <div class="midnight-card">
+                    <h3>🌙 Automated 12:00 AM WhatsApp Report</h3>
+                    <p>At 12:00 AM daily closing, an automated audit summary is prepared and dispatched directly to the restaurant owner's WhatsApp number.</p>
+
+                    <div class="report-preview-box" id="midnightPreview">
+Generating 12:00 AM Report Preview...
+                    </div>
+
+                    <button class="btn-pill-sm btn-gold" style="width:100%; justify-content:center;" onclick="sendMidnightReportWA()">
+                        📲 Send 12:00 AM Report to WhatsApp
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ACTION BOTTOM BAR -->
+        <div class="action-bottom-bar">
+            <div>
+                <span style="font-size:0.85rem; color:#888;">Complete SaaS Flow Active • From Cover to Dining to Real-time Ledger</span>
+            </div>
+            <div style="display:flex; gap:1rem;">
+                <a href="customer-dine.html" class="btn-pill-sm btn-outline">&larr; Open Customer Dine View</a>
+                <a href="qr-studio.html" class="btn-pill-sm btn-outline">🔲 Print More QRs</a>
+                <a href="index.html" class="btn-pill-sm btn-gold">Back to LAANCE Cover</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ====== PUSHER JS CLIENT (CDN — Free) ====== -->
+    <script src="https://js.pusher.com/8.4/pusher.min.js"></script>
+
+    <script>
+        // 🔧 CONFIGURATION — Update these after Pusher account setup
+        const MYQO_CONFIG = {
+            API_URL: localStorage.getItem('myqo_api_url') || 'https://YOUR-BACKEND.onrender.com',
+            PUSHER_KEY: localStorage.getItem('myqo_pusher_key') || 'YOUR_PUSHER_KEY',
+            PUSHER_CLUSTER: localStorage.getItem('myqo_pusher_cluster') || 'ap2'
+        };
+
+        const DEFAULT_RESTAURANT = {
+            name: "Paris Bistro & Gourmet",
+            id: "REST-PARIS-01",
+            phone: "+91 98460 12345"
+        };
+
+        const INITIAL_ORDERS = [
+            {
+                orderId: "ORD-8921",
+                restaurantId: "REST-PARIS-01",
+                tableNo: "Table 01",
+                customerPhone: "+91 98460 55412",
+                itemsSummary: "Wagyu Truffle Sliders (x2), Iced Hibiscus (x2)",
+                totalPrice: 1700,
+                orderTime: "11:42 AM",
+                status: "Active & Cooking"
+            },
+            {
+                orderId: "ORD-8914",
+                restaurantId: "REST-PARIS-01",
+                tableNo: "Table 03",
+                customerPhone: "+91 94471 22890",
+                itemsSummary: "Saffron Lobster Bisque (x1), Artisanal Sourdough (x1)",
+                totalPrice: 1140,
+                orderTime: "11:20 AM",
+                status: "Served"
+            }
+        ];
+
+        let orders = [];
+        let restaurant = DEFAULT_RESTAURANT;
+
+        let soundEnabled = true;
+        let lastKnownOrderCount = 0;
+        let activeClientId = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Check for client filter in URL (multi-tenant)
+            const params = new URLSearchParams(window.location.search);
+            activeClientId = params.get('client');
+
+            // Load restaurant info
+            const savedRest = localStorage.getItem('laance_restaurant');
+            if (savedRest) {
+                try {
+                    restaurant = JSON.parse(savedRest);
+                } catch(e) {}
+            }
+
+            // If client-specific, show client name in header
+            if (activeClientId) {
+                const users = JSON.parse(localStorage.getItem('laance_saas_users')) || [];
+                const client = users.find(u => u.id === activeClientId);
+                if (client) {
+                    const titleEl = document.querySelector('.page-title');
+                    if (titleEl) titleEl.textContent = `${client.businessName || client.name} — Kitchen Screen`;
+                }
+            }
+
+            // Sync Owner Phone in UI
+            document.getElementById('statWhatsApp').textContent = restaurant.phone || DEFAULT_RESTAURANT.phone;
+            document.getElementById('waOwnerName').textContent = `${restaurant.name || 'Owner'} (${restaurant.phone || '+91 98460 12345'})`;
+
+            // Load orders (filtered by client if specified)
+            loadOrders();
+
+            lastKnownOrderCount = orders.length;
+            renderAll();
+
+            // Real-Time Background Listener for Incoming Orders (Every 1.2 seconds fallback)
+            setInterval(checkForLiveOrders, 1200);
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'laance_orders_ledger' || (activeClientId && e.key === 'laance_orders_' + activeClientId)) {
+                    checkForLiveOrders();
+                }
+            });
+
+            // BroadcastChannel for INSTANT same-origin notification (sub-second delivery)
+            try {
+                // Listen on global channel
+                const bc = new BroadcastChannel('laance_orders_channel');
+                bc.onmessage = (event) => {
+                    if (event.data && event.data.type === 'new_order') {
+                        // If we're filtering by client, only react to matching orders
+                        if (!activeClientId || event.data.clientId === activeClientId) {
+                            checkForLiveOrders();
+                        }
+                    }
+                };
+                // Also listen on client-specific channel
+                if (activeClientId) {
+                    const cbc = new BroadcastChannel('laance_orders_' + activeClientId);
+                    cbc.onmessage = (event) => {
+                        if (event.data && event.data.type === 'new_order') {
+                            checkForLiveOrders();
+                        }
+                    };
+                }
+            } catch(e) { console.log('BroadcastChannel not supported:', e); }
+
+            // ====== 🚀 PUSHER: Real-Time WebSocket Subscription ======
+            // This receives orders from ANY device/browser — not just same-origin!
+            // Works across Cloudflare Pages ↔ Render backend via Pusher cloud.
+            if (MYQO_CONFIG.PUSHER_KEY && !MYQO_CONFIG.PUSHER_KEY.includes('YOUR_PUSHER')) {
+                try {
+                    const pusherInstance = new Pusher(MYQO_CONFIG.PUSHER_KEY, {
+                        cluster: MYQO_CONFIG.PUSHER_CLUSTER,
+                        forceTLS: true
+                    });
+
+                    const ordersChannel = pusherInstance.subscribe('orders');
+
+                    // ⚡ NEW ORDER EVENT — Instant kitchen alert!
+                    ordersChannel.bind('new-order', function(orderData) {
+                        console.log('⚡ PUSHER: New order received!', orderData);
+
+                        // If filtering by client, only show matching orders
+                        if (activeClientId && orderData.clientId !== activeClientId) return;
+
+                        // Convert Pusher data to our order format
+                        const newOrder = {
+                            orderId: orderData.orderId,
+                            clientId: orderData.clientId || 'DEFAULT',
+                            restaurantId: orderData.restaurantId || restaurant.id,
+                            tableNo: orderData.tableNo,
+                            customerPhone: orderData.customerPhone,
+                            itemsSummary: orderData.itemsSummary,
+                            totalPrice: Number(orderData.totalPrice),
+                            orderTime: orderData.orderTime,
+                            status: orderData.status || 'Active & Cooking'
+                        };
+
+                        // Check if order already exists (avoid duplicates from BroadcastChannel)
+                        const alreadyExists = orders.some(o => o.orderId === newOrder.orderId);
+                        if (alreadyExists) {
+                            console.log('ℹ️ Order already in list (from BroadcastChannel), skipping duplicate.');
+                            return;
+                        }
+
+                        // Add to orders list
+                        orders.unshift(newOrder);
+                        lastKnownOrderCount = orders.length;
+
+                        // Save to localStorage for persistence
+                        saveCurrentOrders();
+
+                        // Re-render everything
+                        renderAll();
+
+                        // 🔔 Play the DING-DONG chime!
+                        playOrderChime();
+
+                        // 🚨 Flash the live order alert banner!
+                        showLiveOrderBanner(newOrder);
+                    });
+
+                    // 📋 ORDER STATUS UPDATE EVENT
+                    ordersChannel.bind('order-status-update', function(data) {
+                        console.log('📋 PUSHER: Status update:', data);
+                        const idx = orders.findIndex(o => o.orderId === data.orderId);
+                        if (idx !== -1) {
+                            orders[idx].status = data.status;
+                            saveCurrentOrders();
+                            renderAll();
+                        }
+                    });
+
+                    // Connection state logging
+                    pusherInstance.connection.bind('connected', function() {
+                        console.log('✅ PUSHER: Connected! Kitchen screen is LIVE.');
+                        // Show a subtle green indicator
+                        const btn = document.getElementById('btnSoundToggle');
+                        if (btn) btn.title = 'Pusher: Connected ✅';
+                    });
+
+                    pusherInstance.connection.bind('disconnected', function() {
+                        console.log('⚠️ PUSHER: Disconnected. Falling back to polling...');
+                    });
+
+                    pusherInstance.connection.bind('error', function(err) {
+                        console.log('❌ PUSHER connection error:', err);
+                    });
+
+                } catch(e) {
+                    console.log('Pusher init error:', e);
+                }
+            } else {
+                console.log('ℹ️ Pusher not configured. Using localStorage polling fallback.');
+                console.log('   Set keys: localStorage.setItem("myqo_pusher_key", "YOUR_KEY")');
+            }
+        });
+
+        function loadOrders() {
+            if (activeClientId) {
+                // Load client-specific orders
+                const clientOrders = localStorage.getItem('laance_orders_' + activeClientId);
+                if (clientOrders) {
+                    try { orders = JSON.parse(clientOrders); } catch(e) { orders = []; }
+                } else {
+                    // Fallback: filter from global ledger
+                    const allOrders = JSON.parse(localStorage.getItem('laance_orders_ledger')) || [];
+                    orders = allOrders.filter(o => o.clientId === activeClientId);
+                }
+            } else {
+                const savedOrders = localStorage.getItem('laance_orders_ledger');
+                if (savedOrders) {
+                    try { orders = JSON.parse(savedOrders); } catch(e) { orders = INITIAL_ORDERS; }
+                } else {
+                    orders = INITIAL_ORDERS;
+                    localStorage.setItem('laance_orders_ledger', JSON.stringify(orders));
+                }
+            }
+        }
+
+        function toggleKitchenSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('btnSoundToggle');
+            if (soundEnabled) {
+                btn.textContent = "🔔 Sound Alert: ON";
+                btn.className = "btn-pill-sm btn-gold";
+                playOrderChime(true);
+            } else {
+                btn.textContent = "🔕 Sound Alert: MUTED";
+                btn.className = "btn-pill-sm btn-outline";
+            }
+        }
+
+        function playOrderChime(force) {
+            if (!soundEnabled && !force) return;
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // "DING" - High bright bell strike (E6)
+                const ding = ctx.createOscillator();
+                const dingGain = ctx.createGain();
+                ding.type = 'sine';
+                ding.frequency.setValueAtTime(1318.51, ctx.currentTime);
+                dingGain.gain.setValueAtTime(0.5, ctx.currentTime);
+                dingGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+                ding.connect(dingGain);
+                dingGain.connect(ctx.destination);
+                ding.start(ctx.currentTime);
+                ding.stop(ctx.currentTime + 0.8);
+
+                // Harmonic overtone for bell richness (E7)
+                const dingH = ctx.createOscillator();
+                const dingHGain = ctx.createGain();
+                dingH.type = 'sine';
+                dingH.frequency.setValueAtTime(2637.02, ctx.currentTime);
+                dingHGain.gain.setValueAtTime(0.15, ctx.currentTime);
+                dingHGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+                dingH.connect(dingHGain);
+                dingHGain.connect(ctx.destination);
+                dingH.start(ctx.currentTime);
+                dingH.stop(ctx.currentTime + 0.5);
+
+                // "DONG" - Lower warm bell strike delayed (E5)
+                const dong = ctx.createOscillator();
+                const dongGain = ctx.createGain();
+                dong.type = 'sine';
+                dong.frequency.setValueAtTime(659.25, ctx.currentTime + 0.35);
+                dongGain.gain.setValueAtTime(0.45, ctx.currentTime + 0.35);
+                dongGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5);
+                dong.connect(dongGain);
+                dongGain.connect(ctx.destination);
+                dong.start(ctx.currentTime + 0.35);
+                dong.stop(ctx.currentTime + 1.5);
+
+                // Dong harmonic (E6)
+                const dongH = ctx.createOscillator();
+                const dongHGain = ctx.createGain();
+                dongH.type = 'sine';
+                dongH.frequency.setValueAtTime(1318.51, ctx.currentTime + 0.35);
+                dongHGain.gain.setValueAtTime(0.1, ctx.currentTime + 0.35);
+                dongHGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.0);
+                dongH.connect(dongHGain);
+                dongHGain.connect(ctx.destination);
+                dongH.start(ctx.currentTime + 0.35);
+                dongH.stop(ctx.currentTime + 1.0);
+
+                // Second "DING" repeat for restaurant bell feel
+                const ding2 = ctx.createOscillator();
+                const ding2Gain = ctx.createGain();
+                ding2.type = 'sine';
+                ding2.frequency.setValueAtTime(1318.51, ctx.currentTime + 1.0);
+                ding2Gain.gain.setValueAtTime(0.35, ctx.currentTime + 1.0);
+                ding2Gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.8);
+                ding2.connect(ding2Gain);
+                ding2Gain.connect(ctx.destination);
+                ding2.start(ctx.currentTime + 1.0);
+                ding2.stop(ctx.currentTime + 1.8);
+
+            } catch(e) {
+                console.log('Audio chime error:', e);
+            }
+        }
+
+        function checkForLiveOrders() {
+            let saved;
+            if (activeClientId) {
+                saved = localStorage.getItem('laance_orders_' + activeClientId);
+                if (!saved) {
+                    // Fallback: filter from global
+                    const all = JSON.parse(localStorage.getItem('laance_orders_ledger') || '[]');
+                    const filtered = all.filter(o => o.clientId === activeClientId);
+                    saved = JSON.stringify(filtered);
+                }
+            } else {
+                saved = localStorage.getItem('laance_orders_ledger');
+            }
+            if (!saved) return;
+            try {
+                const currentList = JSON.parse(saved);
+                if (currentList.length > lastKnownOrderCount) {
+                    const newOrder = currentList[0];
+                    lastKnownOrderCount = currentList.length;
+                    orders = currentList;
+                    renderAll();
+
+                    // Play chime sound and flash banner
+                    playOrderChime();
+                    showLiveOrderBanner(newOrder);
+                } else if (currentList.length < lastKnownOrderCount) {
+                    lastKnownOrderCount = currentList.length;
+                    orders = currentList;
+                    renderAll();
+                }
+            } catch(e) {}
+        }
+
+        function showLiveOrderBanner(o) {
+            const banner = document.getElementById('liveOrderAlertBanner');
+            document.getElementById('alertBannerTitle').textContent = `🚨 NEW INCOMING ORDER! ${o.tableNo} (#${o.orderId})`;
+            document.getElementById('alertBannerSubtitle').textContent = `${o.itemsSummary} · Total: ₹${Number(o.totalPrice).toFixed(2)}`;
+            banner.style.display = 'flex';
+        }
+
+        function dismissAlertBanner() {
+            document.getElementById('liveOrderAlertBanner').style.display = 'none';
+        }
+
+        function printKOT(orderId) {
+            const o = orders.find(x => x.orderId === orderId);
+            if (!o) return;
+            const printWindow = window.open('', '', 'width=420,height=580');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>KOT - ${o.tableNo}</title>
+                    <style>
+                        body { font-family: monospace; padding: 25px; font-size: 14px; color: #000; }
+                        .center { text-align: center; }
+                        .line { border-top: 1px dashed #000; margin: 12px 0; }
+                        h2, h3 { margin: 4px 0; }
+                    </style>
+                </head>
+                <body>
+                    <div class="center">
+                        <h2>*** KITCHEN ORDER TICKET ***</h2>
+                        <h3>${o.tableNo.toUpperCase()}</h3>
+                        <p>Order: <strong>#${o.orderId}</strong> &middot; Time: ${o.orderTime}</p>
+                    </div>
+                    <div class="line"></div>
+                    <p><strong>ORDERED ITEMS:</strong><br>${o.itemsSummary.replace(/,/g, '<br>')}</p>
+                    <div class="line"></div>
+                    <p>Customer Mobile: ${o.customerPhone}<br>Total: ₹${o.totalPrice}</p>
+                    <div class="line"></div>
+                    <div class="center" style="font-size:11px; margin-top:15px;">
+                        *** DISPATCHED VIA LAANCE QR KDS ***
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        }
+
+        function toggleOrderStatus(orderId) {
+            const idx = orders.findIndex(x => x.orderId === orderId);
+            if (idx === -1) return;
+            if (orders[idx].status.includes('Ready')) {
+                orders[idx].status = 'Active & Cooking';
+            } else {
+                orders[idx].status = '🟢 Ready for Table';
+            }
+            saveCurrentOrders();
+            renderAll();
+        }
+
+        function saveCurrentOrders() {
+            if (activeClientId) {
+                localStorage.setItem('laance_orders_' + activeClientId, JSON.stringify(orders));
+            }
+            // Also update global ledger
+            localStorage.setItem('laance_orders_ledger', JSON.stringify(orders));
+        }
+
+        function renderAll() {
+            renderTable();
+            renderChatFeed();
+            renderMidnightPreview();
+            updateStats();
+        }
+
+        function updateStats() {
+            const count = orders.length;
+            const rev = orders.reduce((s, o) => s + Number(o.totalPrice || 0), 0);
+            const pts = Math.floor(rev / 100);
+
+            document.getElementById('statOrdersCount').textContent = count;
+            document.getElementById('statRevenue').textContent = `₹${rev.toLocaleString('en-IN')}`;
+            document.getElementById('statPoints').textContent = `${pts} pts`;
+        }
+
+        function renderTable() {
+            const body = document.getElementById('sheetBody');
+            if (orders.length === 0) {
+                body.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:2rem; color:#888;">No orders in Google Sheets yet. Click "+ Dine-in Order" to submit one!</td></tr>`;
+                return;
+            }
+
+            body.innerHTML = orders.map((o, index) => {
+                const pts = Math.floor(Number(o.totalPrice || 0) / 100);
+                const isReady = o.status.includes('Ready');
+                return `
+                    <tr class="${index === 0 ? 'new-order-row' : ''}" style="${index === 0 ? 'background:rgba(212,175,55,0.06);' : ''}">
+                        <td style="color:#666;">${orders.length - index}</td>
+                        <td style="color:var(--accent-gold); font-weight:700;">${o.orderId}</td>
+                        <td><span class="pill-badge pill-table">${o.tableNo}</span></td>
+                        <td>${o.customerPhone || 'N/A'}</td>
+                        <td style="max-width:240px; overflow:hidden; text-overflow:ellipsis;" title="${o.itemsSummary}">${o.itemsSummary}</td>
+                        <td style="font-weight:700; color:#fff;">₹${Number(o.totalPrice).toFixed(2)}</td>
+                        <td style="color:#f3ce49;">+${pts} pts</td>
+                        <td style="color:#888;">${o.orderTime}</td>
+                        <td><span class="pill-badge ${isReady ? 'pill-green' : 'pill-active'}">${o.status}</span></td>
+                        <td>
+                            <div style="display:flex; gap:0.4rem;">
+                                <button class="btn-sheet-action" onclick="printKOT('${o.orderId}')" title="Print Kitchen Order Ticket" style="background:#20202d;">🖨️ KOT</button>
+                                <button class="btn-sheet-action" onclick="toggleOrderStatus('${o.orderId}')" style="background:${isReady ? '#10b981' : '#ff7a18'}; color:#000; font-weight:800;">${isReady ? '✓ Ready' : 'Mark Ready'}</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderChatFeed() {
+            const feed = document.getElementById('chatFeed');
+            const targetPhone = (restaurant.phone || "+91 98460 12345").replace(/[^0-9]/g, '');
+
+            if (orders.length === 0) {
+                feed.innerHTML = `<div style="text-align:center; color:#888; padding:2rem; font-size:0.8rem;">No WhatsApp alerts dispatched yet.</div>`;
+                return;
+            }
+
+            feed.innerHTML = orders.map(o => {
+                const textMsg = `🔔 *NEW DINE-IN ORDER RECEIVED*\n📍 *Table:* ${o.tableNo}\n🆔 *Order ID:* #${o.orderId}\n🍽️ *Items:* ${o.itemsSummary}\n💰 *Total:* ₹${o.totalPrice}\n📱 *Customer:* ${o.customerPhone}\n⏱️ *Time:* ${o.orderTime}`;
+                const waUrl = `https://wa.me/${targetPhone}?text=${encodeURIComponent(textMsg)}`;
+
+                return `
+                    <div class="chat-bubble">
+                        <div>🔔 <strong>NEW DINE-IN ORDER</strong></div>
+                        <div style="margin-top:0.3rem;">📍 <strong>${o.tableNo}</strong> | 🆔 #${o.orderId}</div>
+                        <div style="color:#e0f2fe; margin-top:0.2rem;">🍽️ ${o.itemsSummary}</div>
+                        <div style="font-weight:800; color:#fef08a; margin-top:0.3rem;">💰 Bill: ₹${o.totalPrice}</div>
+                        <div style="font-size:0.75rem; color:#cbd5e1;">📱 Guest: ${o.customerPhone}</div>
+                        <span class="bubble-time">${o.orderTime} ✓✓</span>
+                        <a href="${waUrl}" target="_blank" class="btn-open-wa">📲 Open in WhatsApp Web / App</a>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMidnightPreview() {
+            const count = orders.length;
+            const rev = orders.reduce((s, o) => s + Number(o.totalPrice || 0), 0);
+            const pts = Math.floor(rev / 100);
+            const todayStr = new Date().toLocaleDateString('en-GB');
+
+            const text = 
+`🌙 LAANCE DAILY CLOSING REPORT (12:00 AM)
+📅 Date: ${todayStr}
+🏪 Restaurant: ${restaurant.name || 'Paris Bistro'} (${restaurant.id || 'REST-01'})
+------------------------------------------
+📊 Total Orders Processed: ${count}
+💵 Total Daily Sales: ₹${rev.toLocaleString('en-IN')}
+🏆 Loyalty Points Issued: ${pts} pts
+🥇 Top Active Table: Table 01
+------------------------------------------
+📈 Status: 100% Synchronized with Google Sheets Ledger.`;
+
+            document.getElementById('midnightPreview').textContent = text;
+        }
+
+        function sendMidnightReportWA() {
+            const reportText = document.getElementById('midnightPreview').textContent;
+            const targetPhone = (restaurant.phone || "+91 98460 12345").replace(/[^0-9]/g, '');
+            const waUrl = `https://wa.me/${targetPhone}?text=${encodeURIComponent(reportText)}`;
+            window.open(waUrl, '_blank');
+        }
+
+        function simulateNewOrder() {
+            const randomTable = Math.floor(1 + Math.random() * 6);
+            const randomId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+            const sampleDishes = [
+                "Artisanal French Onion Soup (x1), Garlic Toast (x2)",
+                "Wagyu Truffle Sliders (x2), Iced Hibiscus (x1)",
+                "Flame-Grilled Salmon Fillet (x1), Espresso (x1)",
+                "Black Truffle Pasta (x2), Sparkling Water (x2)"
+            ];
+            const samplePrices = [820, 1530, 1150, 1640];
+            const randIdx = Math.floor(Math.random() * sampleDishes.length);
+
+            const newOrder = {
+                orderId: randomId,
+                restaurantId: restaurant.id || "REST-PARIS-01",
+                tableNo: `Table 0${randomTable}`,
+                customerPhone: "+91 984" + Math.floor(1000000 + Math.random() * 9000000),
+                itemsSummary: sampleDishes[randIdx],
+                totalPrice: samplePrices[randIdx],
+                orderTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                status: "Active & Cooking"
+            };
+
+            orders.unshift(newOrder);
+            localStorage.setItem('laance_orders_ledger', JSON.stringify(orders));
+            renderAll();
+        }
+
+        function clearLedger() {
+            if (confirm("Reset current order ledger to default state?")) {
+                orders = [];
+                localStorage.setItem('laance_orders_ledger', JSON.stringify([]));
+                renderAll();
+            }
+        }
+
+        function exportCSV() {
+            if (orders.length === 0) {
+                alert("No orders to export.");
+                return;
+            }
+            let csv = "Order_ID,Restaurant_ID,Table_No,Customer_Phone,Items_Ordered,Total_Price,Order_Time,Status\n";
+            orders.forEach(o => {
+                csv += `"${o.orderId}","${o.restaurantId}","${o.tableNo}","${o.customerPhone}","${o.itemsSummary.replace(/"/g, '""')}","${o.totalPrice}","${o.orderTime}","${o.status}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `LAANCE_Orders_Ledger_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

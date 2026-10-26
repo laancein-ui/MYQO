@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LAANCE SaaS | Table QR Studio &amp; Logo Creator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-black: #08080c;
+            --bg-card: #121218;
+            --bg-card-alt: #181824;
+            --text-white: #ffffff;
+            --text-muted: #9e9ea7;
+            --accent-gold: #d4af37;
+            --accent-gold-bright: #f3ce49;
+            --accent-orange: #ff7a18;
+            --accent-green: #10b981;
+            --border-dark: rgba(255, 255, 255, 0.12);
+            --font-heading: 'Cinzel', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --radius-pill: 9999px;
+            --radius-card: 20px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-black);
+            color: #ffffff;
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navbar */
+        .top-navbar {
+            background: rgba(10, 10, 14, 0.95);
+            border-bottom: 1px solid var(--border-dark);
+            padding: 1rem 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: #ffffff;
+        }
+        .nav-brand .crest { font-size: 1.4rem; }
+        .nav-brand .brand { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 800; color: var(--accent-gold); }
+        .nav-brand .sub { font-size: 0.65rem; color: #888; letter-spacing: 0.2em; }
+
+        .btn-pill-sm {
+            padding: 0.5rem 1.4rem;
+            border-radius: var(--radius-pill);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-outline { background: transparent; border: 1px solid var(--border-dark); color: #ccc; }
+        .btn-outline:hover { color: #fff; border-color: #fff; background: rgba(255,255,255,0.05); }
+        .btn-gold { background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold)); color: #000; }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4); }
+
+        .container {
+            max-width: 1360px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2.2rem 2.5rem 5rem;
+        }
+
+        .page-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2.2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-dark);
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .step-tag { font-size: 0.75rem; letter-spacing: 0.25em; color: var(--accent-gold); font-weight: 800; display: block; margin-bottom: 0.3rem; }
+        .page-title { font-family: var(--font-heading); font-size: 2.2rem; color: #fff; }
+
+        .qr-studio-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 0.95fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .config-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-card);
+            padding: 2.2rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
+
+        .config-section {
+            margin-bottom: 1.8rem;
+            padding-bottom: 1.6rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .config-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+        .config-section h4 {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .config-section .hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        /* Table picker chips */
+        .table-picker-chips {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .btn-chip {
+            background: #181822;
+            border: 1px solid var(--border-dark);
+            color: #fff;
+            padding: 0.55rem 1.1rem;
+            border-radius: var(--radius-pill);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-chip.active, .btn-chip:hover {
+            background: var(--accent-gold);
+            color: #000;
+            border-color: var(--accent-gold);
+            box-shadow: 0 4px 15px rgba(212,175,55,0.3);
+        }
+
+        .custom-table-row {
+            display: flex;
+            gap: 0.8rem;
+        }
+        .ctrl-input {
+            width: 100%;
+            background: #191924;
+            border: 1px solid var(--border-dark);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.88rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .ctrl-input:focus {
+            border-color: var(--accent-gold);
+            background: #20202e;
+        }
+
+        /* Logo Selector in QR */
+        .logo-options-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        .logo-option-card {
+            background: #191924;
+            border: 2px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 0.8rem 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .logo-option-card:hover { transform: translateY(-2px); border-color: rgba(212,175,55,0.4); }
+        .logo-option-card.active {
+            border-color: var(--accent-gold);
+            background: rgba(212,175,55,0.12);
+            box-shadow: 0 4px 15px rgba(212,175,55,0.25);
+        }
+        .logo-option-card .icon { font-size: 1.8rem; }
+        .logo-option-card .label { font-size: 0.72rem; font-weight: 700; color: #ddd; }
+
+        .upload-logo-box {
+            background: #151520;
+            border: 1px dashed rgba(212,175,55,0.4);
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        /* Color Presets */
+        .qr-color-palette {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.4rem;
+        }
+        .qr-color-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .qr-color-btn:hover { transform: scale(1.1); }
+        .qr-color-btn.active { border-color: #fff; box-shadow: 0 0 10px currentColor; }
+
+        /* Actions */
+        .btn-action-row {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.8rem;
+            flex-wrap: wrap;
+        }
+
+        /* Printable Stand Card Preview */
+        .stand-preview-frame {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: sticky;
+            top: 6rem;
+        }
+
+        .luxury-stand {
+            width: 350px;
+            background: #020203;
+            border: 3px solid var(--accent-gold);
+            border-radius: 26px;
+            padding: 2.5rem 2rem 2rem;
+            text-align: center;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.9), 0 0 30px rgba(212,175,55,0.2);
+            position: relative;
+        }
+
+        .luxury-stand .crest {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+            color: var(--accent-gold);
+            font-weight: 800;
+        }
+        .luxury-stand .bistro {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.2rem;
+        }
+        .luxury-stand .table-num {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold));
+            color: #000;
+            font-weight: 900;
+            font-size: 0.85rem;
+            padding: 0.3rem 1.1rem;
+            border-radius: var(--radius-pill);
+            margin-bottom: 1.4rem;
+            letter-spacing: 0.05em;
+        }
+
+        .qr-canvas-container {
+            background: #ffffff;
+            padding: 1.2rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 1.4rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        #qrCompositeCanvas {
+            display: block;
+            width: 220px;
+            height: 220px;
+            border-radius: 8px;
+        }
+
+        .luxury-stand h4 { font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 0.3rem; letter-spacing: 0.05em; }
+        .luxury-stand p { font-size: 0.76rem; color: #888; margin-bottom: 1.2rem; }
+        .luxury-stand .footer { font-size: 0.65rem; color: #666; letter-spacing: 0.2em; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.8rem; }
+
+        @media print {
+            body * { visibility: hidden; }
+            .stand-preview-frame, .stand-preview-frame * { visibility: visible; }
+            .stand-preview-frame { position: absolute; left: 0; top: 0; width: 100%; display: flex; justify-content: center; }
+            .luxury-stand { border: 2px solid #000; color: #000; box-shadow: none; }
+        }
+
+        @media (max-width: 950px) {
+            .qr-studio-grid { grid-template-columns: 1fr; }
+            .stand-preview-frame { position: static; margin-top: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAVBAR -->
+    <header class="top-navbar">
+        <a href="index.html" class="nav-brand">
+            <span class="crest">⚔️</span>
+            <div>
+                <span class="brand">LAANCE</span>
+                <span class="sub">STUDIO AGATHO</span>
+            </div>
+        </a>
+
+        <div style="display:flex; gap:0.8rem; align-items:center;">
+            <a href="dashboard.html" class="btn-pill-sm btn-outline">🎛️ Control Hub</a>
+            <a href="menu-builder.html" class="btn-pill-sm btn-outline">&larr; Menu Builder</a>
+            <a href="owner-performance.html" class="btn-pill-sm btn-outline">👑 Owner Performance</a>
+            <button class="btn-pill-sm btn-gold" onclick="openCustomerDine()">
+                📲 Test Live Menu &rarr;
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <div class="page-header-row">
+            <div>
+                <span class="step-tag">TABLE QR GENERATOR &middot; BRANDED LOGO EMBEDDER</span>
+                <h1 class="page-title">Generate &amp; Download QR Codes</h1>
+                <p style="color:#888; margin-top:0.3rem;">Create custom table QR codes with your restaurant logo embedded right in the center for contactless ordering.</p>
+            </div>
+            <div>
+                <button class="btn-pill-sm btn-gold" onclick="downloadQRCodePNG()">
+                    📥 Download High-Res PNG
+                </button>
+            </div>
+        </div>
+
+        <div class="qr-studio-grid">
+            
+            <!-- LEFT CONFIGURATION CONTROLS -->
+            <div class="config-card">
+
+                <!-- 1. Table Selection & Custom Area Creation -->
+                <div class="config-section">
+                    <h4>🪑 1. Select or Create Custom Table / Area</h4>
+                    <p class="hint">Choose standard table numbers or create customized labels (e.g., VIP Lounge, Counter).</p>
+
+                    <div class="table-picker-chips">
+                        <button class="btn-chip active" onclick="selectTable('Table 01', 1)">Table 01</button>
+                        <button class="btn-chip" onclick="selectTable('Table 02', 2)">Table 02</button>
+                        <button class="btn-chip" onclick="selectTable('Table 03', 3)">Table 03</button>
+                        <button class="btn-chip" onclick="selectTable('Table 04', 4)">Table 04</button>
+                        <button class="btn-chip" onclick="selectTable('Table 05', 5)">Table 05</button>
+                        <button class="btn-chip" onclick="selectTable('Table 06', 6)">Table 06</button>
+                        <button class="btn-chip" onclick="selectTable('Table 07', 7)">Table 07</button>
+                        <button class="btn-chip" onclick="selectTable('Table 08', 8)">Table 08</button>
+                    </div>
+
+                    <div class="custom-table-row">
+                        <input type="text" id="customTableInput" class="ctrl-input" placeholder="Or enter custom table name (e.g. VIP Room 01, Terrace 03)" />
+                        <button type="button" class="btn-pill-sm btn-gold" onclick="createCustomTable()" style="white-space:nowrap;">
+                            + Set Table
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. Restaurant Logo Inside QR Option (User Requested!) -->
+                <div class="config-section">
+                    <h4>🛡️ 2. Add Restaurant Logo to QR Code Center</h4>
+                    <p class="hint">The logo is automatically rendered in the center of the QR code with an anti-bleed safety boundary.</p>
+
+                    <div class="logo-options-grid">
+                        <div class="logo-option-card active" onclick="selectLogoPreset('⚔️', this)">
+                            <span class="icon">⚔️</span>
+                            <span class="label">Crest</span>
+                        </div>
+                        <div class="logo-option-card" onclick="selectLogoPreset('👑', this)">
+                            <span class="icon">👑</span>
+                            <span class="label">Crown</span>
+                        </div>
+                        <div class="logo-option-card" onclick="selectLogoPreset('🍽️', this)">
+                            <span class="icon">🍽️</span>
+                            <span class="label">Dining</span>
+                        </div>
+                        <div class="logo-option-card" onclick="selectLogoPreset('🍷', this)">
+                            <span class="icon">🍷</span>
+                            <span class="label">Lounge</span>
+                        </div>
+                        <div class="logo-option-card" onclick="selectLogoPreset('☕', this)">
+                            <span class="icon">☕</span>
+                            <span class="label">Cafe</span>
+                        </div>
+                    </div>
+
+                    <div class="upload-logo-box">
+                        <div>
+                            <strong style="font-size:0.85rem; color:#fff; display:block;">Or Upload Custom Logo Image:</strong>
+                            <span style="font-size:0.75rem; color:#888;">PNG or JPEG (Square recommended, transparent background)</span>
+                        </div>
+                        <input type="file" id="logoFileInput" accept="image/*" onchange="handleCustomLogoUpload(event)" style="font-size:0.8rem; color:#ccc;" />
+                    </div>
+                </div>
+
+                <!-- 3. QR Foreground Color -->
+                <div class="config-section">
+                    <h4>🎨 3. QR Code Color Theme</h4>
+                    <p class="hint">Select the primary QR pattern color.</p>
+                    <div class="qr-color-palette">
+                        <button type="button" class="qr-color-btn active" style="background:#000000;" data-color="000000" onclick="setQRColor('000000', this)" title="Classic Black"></button>
+                        <button type="button" class="qr-color-btn" style="background:#8a6912;" data-color="8a6912" title="Royal Gold" onclick="setQRColor('8a6912', this)"></button>
+                        <button type="button" class="qr-color-btn" style="background:#0f5132;" data-color="0f5132" title="Emerald Green" onclick="setQRColor('0f5132', this)"></button>
+                        <button type="button" class="qr-color-btn" style="background:#0d3b66;" data-color="0d3b66" title="Navy Blue" onclick="setQRColor('0d3b66', this)"></button>
+                        <button type="button" class="qr-color-btn" style="background:#780000;" data-color="780000" title="Crimson" onclick="setQRColor('780000', this)"></button>
+                    </div>
+                </div>
+
+                <!-- 4. Target Destination Link & WhatsApp -->
+                <div class="config-section">
+                    <h4>🔗 4. Destination URL &amp; WhatsApp Notifications</h4>
+                    <label style="font-size:0.8rem; color:#aaa; display:block; margin-bottom:0.3rem;">Target URL:</label>
+                    <input type="text" id="targetUrlBox" class="ctrl-input" readonly style="font-family:monospace; color:#34d399; margin-bottom:0.8rem;" />
+
+                    <div style="background:#151520; border:1px solid var(--border-dark); padding:0.8rem 1rem; border-radius:10px; display:flex; align-items:center; gap:0.6rem; font-size:0.85rem;">
+                        <span>💬 Kitchen WhatsApp Alerts:</span>
+                        <strong id="waNumberText" style="color:var(--accent-gold);">+91 98470 54321</strong>
+                    </div>
+                </div>
+
+                <div class="btn-action-row">
+                    <button class="btn-pill-sm btn-gold" onclick="downloadQRCodePNG()" style="padding:0.85rem 1.8rem; font-size:0.92rem;">
+                        📥 Download Branded QR PNG
+                    </button>
+                    <button class="btn-pill-sm btn-outline" onclick="window.print()" style="padding:0.85rem 1.6rem; font-size:0.92rem;">
+                        🖨️ Print Stand Card
+                    </button>
+                    <button class="btn-pill-sm btn-outline" onclick="openCustomerDine()" style="padding:0.85rem 1.6rem; font-size:0.92rem;">
+                        📲 Open Live Customer Menu &rarr;
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- RIGHT STAND CARD PREVIEW WITH CANVAS -->
+            <div class="stand-preview-frame">
+                <div class="luxury-stand" id="printableStand">
+                    <div class="crest" id="standCrest">⚔️ LAANCE</div>
+                    <div class="bistro" id="bistroName">ROYAL SPICE FINE DINING</div>
+                    <div class="table-num" id="tableTitle">TABLE 01</div>
+
+                    <!-- Canvas that draws the QR code and embeds the selected logo in the center -->
+                    <div class="qr-canvas-container">
+                        <canvas id="qrCompositeCanvas" width="400" height="400"></canvas>
+                    </div>
+
+                    <h4>SCAN TO VIEW MENU &amp; ORDER</h4>
+                    <p>Instant WhatsApp &amp; Kitchen Dispatch</p>
+                    <div class="footer">POWERED BY LAANCE &middot; STUDIO AGATHO</div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        let currentLabel = "Table 01";
+        let currentTableNum = 1;
+        let qrColorHex = "000000";
+        let selectedLogoType = "emoji"; // 'emoji' or 'customImage'
+        let selectedEmoji = "⚔️";
+        let uploadedLogoImage = null;
+
+        const restaurant = JSON.parse(localStorage.getItem('laance_restaurant')) || {
+            name: "Royal Spice Fine Dining",
+            companyName: "Royal Spice Fine Dining",
+            whatsapp: "+91 98470 54321"
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const rName = (restaurant.companyName || restaurant.name || "Royal Spice Fine Dining").toUpperCase();
+            document.getElementById('bistroName').textContent = rName;
+            document.getElementById('waNumberText').textContent = restaurant.whatsapp || "+91 98470 54321";
+            selectTable('Table 01', 1);
+        });
+
+        function selectTable(label, num) {
+            currentLabel = label;
+            currentTableNum = num || 1;
+
+            document.querySelectorAll('.btn-chip').forEach(btn => {
+                if (btn.textContent.trim().toLowerCase() === label.trim().toLowerCase()) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            document.getElementById('tableTitle').textContent = label.toUpperCase();
+
+            const origin = window.location.origin;
+            const targetUrl = `${origin}/customer-dine.html?table=${currentTableNum}`;
+            document.getElementById('targetUrlBox').value = targetUrl;
+
+            generateCompositeQR(targetUrl);
+        }
+
+        function createCustomTable() {
+            const val = document.getElementById('customTableInput').value.trim();
+            if (!val) return;
+            selectTable(val, 99);
+        }
+
+        function setQRColor(hex, btn) {
+            qrColorHex = hex;
+            document.querySelectorAll('.qr-color-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const targetUrl = document.getElementById('targetUrlBox').value;
+            generateCompositeQR(targetUrl);
+        }
+
+        function selectLogoPreset(emoji, card) {
+            selectedLogoType = "emoji";
+            selectedEmoji = emoji;
+            uploadedLogoImage = null;
+            document.querySelectorAll('.logo-option-card').forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            document.getElementById('standCrest').textContent = emoji + " " + (restaurant.companyName ? restaurant.companyName.split(' ')[0] : "LAANCE");
+            generateCompositeQR(document.getElementById('targetUrlBox').value);
+        }
+
+        function handleCustomLogoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    uploadedLogoImage = img;
+                    selectedLogoType = "customImage";
+                    document.querySelectorAll('.logo-option-card').forEach(c => c.classList.remove('active'));
+                    generateCompositeQR(document.getElementById('targetUrlBox').value);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Draw Base QR Code and Embed Logo in Center using Canvas
+        function generateCompositeQR(url) {
+            const canvas = document.getElementById('qrCompositeCanvas');
+            const ctx = canvas.getContext('2d');
+            const size = 400;
+
+            // Fetch high-res QR code image from API
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}&color=${qrColorHex}&bgcolor=ffffff&qzone=2`;
+
+            const qrImg = new Image();
+            qrImg.crossOrigin = "anonymous";
+            qrImg.onload = function() {
+                // Draw base QR code
+                ctx.clearRect(0, 0, size, size);
+                ctx.drawImage(qrImg, 0, 0, size, size);
+
+                // Draw central logo badge
+                const center = size / 2;
+                const badgeRadius = 48;
+
+                // Circular white badge background
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(center, center, badgeRadius, 0, Math.PI * 2, false);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+                ctx.lineWidth = 5;
+                ctx.strokeStyle = '#' + qrColorHex;
+                ctx.stroke();
+
+                // Inner gold contour
+                ctx.beginPath();
+                ctx.arc(center, center, badgeRadius - 4, 0, Math.PI * 2, false);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#d4af37';
+                ctx.stroke();
+
+                // Draw logo inside badge
+                if (selectedLogoType === 'customImage' && uploadedLogoImage) {
+                    ctx.beginPath();
+                    ctx.arc(center, center, badgeRadius - 7, 0, Math.PI * 2, false);
+                    ctx.clip();
+                    const logoSize = (badgeRadius - 7) * 2;
+                    ctx.drawImage(uploadedLogoImage, center - logoSize / 2, center - logoSize / 2, logoSize, logoSize);
+                } else {
+                    // Emoji / Crest logo
+                    ctx.font = '40px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(selectedEmoji, center, center + 2);
+                }
+                ctx.restore();
+            };
+            qrImg.src = qrApiUrl;
+        }
+
+        function downloadQRCodePNG() {
+            const canvas = document.getElementById('qrCompositeCanvas');
+            const link = document.createElement('a');
+            link.download = `${restaurant.id || 'REST'}-${currentLabel.replace(/\s+/g, '_')}-QR.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function openCustomerDine() {
+            window.open(document.getElementById('targetUrlBox').value, '_blank');
+        }
+    </script>
+</body>
+</html>

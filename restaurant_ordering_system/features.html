@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simplify Your Restaurant's Operations | LAANCE SaaS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-page: #121519;
+            --bg-card: #1b2027;
+            --bg-card-hover: #222831;
+            --border-card: rgba(255, 255, 255, 0.08);
+            --accent-orange: #ff7a18;
+            --accent-orange-hover: #ff8c33;
+            --text-white: #ffffff;
+            --text-muted: #8d95a2;
+            --text-dim: #606875;
+            --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --radius-card: 16px;
+            --radius-pill: 9999px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-white);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Navbar */
+        .top-navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 4.5rem;
+            max-width: 1360px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 2.2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+        }
+
+        .nav-link.active {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent-orange);
+            border-radius: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-signin {
+            text-decoration: none;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.55rem 1.6rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-signin:hover {
+            border-color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-register {
+            text-decoration: none;
+            color: #ffffff;
+            background-color: var(--accent-orange);
+            padding: 0.55rem 1.8rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.9rem;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .btn-register:hover {
+            background-color: var(--accent-orange-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 122, 24, 0.35);
+        }
+
+        /* Hero Container */
+        .main-content {
+            max-width: 1240px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem 2.5rem 3rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-title {
+            text-align: center;
+            font-size: clamp(2rem, 3.2vw, 2.9rem);
+            font-weight: 800;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            max-width: 900px;
+            margin: 0 auto 3.2rem;
+        }
+
+        /* 2x2 Feature Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.6rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1.05fr 1fr;
+            min-height: 175px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            background-color: var(--bg-card-hover);
+            border-color: rgba(255, 122, 24, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-img-wrap {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #0f1216;
+        }
+
+        .card-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:hover .card-img-wrap img {
+            transform: scale(1.04);
+        }
+
+        .card-body {
+            padding: 1.4rem 1.4rem 1.4rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .badge-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--accent-orange);
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.6rem;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.3;
+            margin-bottom: 0.45rem;
+        }
+
+        .card-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+            margin-bottom: 0.6rem;
+        }
+
+        .card-arrow {
+            color: var(--accent-orange);
+            font-size: 1.25rem;
+            line-height: 1;
+            font-weight: 700;
+            transition: transform 0.2s;
+        }
+
+        .feature-card:hover .card-arrow {
+            transform: translateX(4px);
+        }
+
+        /* Sparkle Icon */
+        .sparkle-icon {
+            position: absolute;
+            right: 1.5rem;
+            bottom: 1.2rem;
+            color: #4b5563;
+            font-size: 1.8rem;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* Footer */
+        .bottom-footer {
+            max-width: 1360px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 1.8rem 4.5rem 2.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        @media (max-width: 960px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .top-navbar {
+                padding: 1.2rem 2rem;
+            }
+            .bottom-footer {
+                padding: 1.5rem 2rem;
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAVBAR -->
+    <header class="top-navbar">
+        <nav class="nav-left">
+            <a href="features.html" class="nav-link active">Home</a>
+            <a href="login.html" class="nav-link">Features</a>
+        </nav>
+
+        <div class="nav-right">
+            <a href="login.html?mode=signin" class="btn-signin">Sign In</a>
+            <a href="login.html?mode=signup" class="btn-register">Register</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        
+        <h1 class="hero-title">
+            Simplify Your Restaurant’s Operations and Increase Customer Attendance by 40%
+        </h1>
+
+        <!-- 2x2 CARDS GRID -->
+        <div class="cards-grid">
+            
+            <!-- Card 1: Instant QR Ordering -->
+            <a href="qr-studio.html" class="feature-card" title="Click to view Instant Table QR Generator">
+                <div class="card-img-wrap">
+                    <img src="assets/card-qr-ordering.png" alt="Instant QR Ordering" />
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="badge-number">1</div>
+                        <h3 class="card-title">Instant QR Ordering</h3>
+                        <p class="card-desc">Allow customers to browse and order from their phone instantly.</p>
+                    </div>
+                    <div class="card-arrow">&rarr;</div>
+                </div>
+            </a>
+
+            <!-- Card 2: Real-Time Kitchen Display -->
+            <a href="live-operations.html" class="feature-card" title="Click to view Real-time Kitchen Operations">
+                <div class="card-img-wrap">
+                    <img src="assets/card-kitchen-display.png" alt="Real-Time Kitchen Display" />
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="badge-number">2</div>
+                        <h3 class="card-title">Real-Time Kitchen Display</h3>
+                        <p class="card-desc">Boost kitchen efficiency with live order tracking and communication.</p>
+                    </div>
+                    <div class="card-arrow">&rarr;</div>
+                </div>
+            </a>
+
+            <!-- Card 3: Hotel Owner Reward Control Panel -->
+            <a href="dashboard.html" class="feature-card" title="Click to access Owner Reward Control Panel">
+                <div class="card-img-wrap">
+                    <img src="assets/card-reward-panel.png" alt="Hotel Owner Reward Control Panel" />
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="badge-number">3</div>
+                        <h3 class="card-title">Hotel Owner Reward Control Panel</h3>
+                        <p class="card-desc">Configure, check, and manage customer reward points and free food milestones.</p>
+                    </div>
+                    <div class="card-arrow">&rarr;</div>
+                </div>
+            </a>
+
+            <!-- Card 4: Analytics & Reporting -->
+            <a href="owner-performance.html" class="feature-card" title="Click to view Analytics & Graphs">
+                <div class="card-img-wrap">
+                    <img src="assets/card-analytics.png" alt="Analytics & Reporting" />
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="badge-number">4</div>
+                        <h3 class="card-title">Analytics & Reporting</h3>
+                        <p class="card-desc">Receive weekly growth charts and automated email performance reports.</p>
+                    </div>
+                    <div class="card-arrow">&rarr;</div>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- Sparkle Decoration Icon -->
+        <div class="sparkle-icon">✦</div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bottom-footer">
+        <div class="footer-links">
+            <a href="login.html">Company</a>
+            <a href="login.html">Links</a>
+            <a href="login.html">Pricing</a>
+            <a href="login.html">Contacts</a>
+            <a href="login.html">Thtrups</a>
+            <a href="login.html">Links</a>
+        </div>
+        <div>
+            Copyright all saas reserved
+        </div>
+    </footer>
+
+</body>
+</html>
