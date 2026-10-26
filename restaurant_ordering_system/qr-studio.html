@@ -380,7 +380,13 @@
 
                     <div style="margin-top:0.8rem;">
                         <label style="font-size:0.75rem; color:#aaa; font-weight:700;">✏️ Restaurant Brand Name (Shown on Phone when scanned):</label>
-                        <input type="text" id="restaurantNameInput" class="ctrl-input" placeholder="e.g. Al Reem Mandi, Paris Bistro" style="margin-top:0.3rem;" oninput="onCustomRestaurantNameInput(this.value)" />
+                        <div style="display:flex; gap:0.5rem; margin-top:0.3rem;">
+                            <input type="text" id="restaurantNameInput" class="ctrl-input" placeholder="e.g. Al Reem Mandi, Paris Bistro" oninput="onCustomRestaurantNameInput(this.value)" />
+                            <button type="button" class="btn-pill-sm btn-gold" onclick="saveCurrentRestaurantAsClient()" style="white-space:nowrap; padding:0.5rem 1rem; font-size:0.82rem;">
+                                💾 Save Restaurant
+                            </button>
+                        </div>
+                        <p id="saveNotice" style="font-size:0.72rem; color:#4ade80; margin-top:0.3rem; display:none;">✅ Saved to your restaurant list!</p>
                     </div>
                 </div>
 
@@ -705,10 +711,55 @@
             qrImg.src = qrApiUrl;
         }
 
+        function saveCurrentRestaurantAsClient() {
+            const nameInput = document.getElementById('restaurantNameInput');
+            const name = nameInput.value.trim();
+            if (!name) { alert('Please enter a restaurant brand name!'); return; }
+
+            const users = JSON.parse(localStorage.getItem('laance_saas_users')) || [];
+            let existing = users.find(u => (u.businessName || u.name).toLowerCase() === name.toLowerCase());
+
+            if (!existing) {
+                const newId = 'USR-' + String(users.length + 1).padStart(4, '0');
+                existing = {
+                    id: newId,
+                    name: name,
+                    businessName: name,
+                    phone: restaurant.whatsapp || "+91 98470 54321",
+                    status: 'Active',
+                    joinedAt: new Date().toISOString()
+                };
+                users.unshift(existing);
+                localStorage.setItem('laance_saas_users', JSON.stringify(users));
+
+                // Also save to Render Cloud Backend
+                const apiUrl = localStorage.getItem('myqo_api_url') || 'https://myqo-backend.onrender.com';
+                try {
+                    fetch(`${apiUrl}/api/clients`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(existing)
+                    }).catch(e => {});
+                } catch(e) {}
+            }
+
+            selectedClientId = existing.id;
+            initClientPicker();
+            selectTable(currentLabel, currentTableNum);
+
+            const notice = document.getElementById('saveNotice');
+            if (notice) {
+                notice.textContent = `✅ "${name}" saved! You can select it anytime and download QRs.`;
+                notice.style.display = 'block';
+                setTimeout(() => { notice.style.display = 'none'; }, 4000);
+            }
+        }
+
         function downloadQRCodePNG() {
             const canvas = document.getElementById('qrCompositeCanvas');
+            const bName = (document.getElementById('bistroName').textContent || 'Restaurant').trim();
             const link = document.createElement('a');
-            link.download = `${restaurant.id || 'REST'}-${currentLabel.replace(/\s+/g, '_')}-QR.png`;
+            link.download = `${bName.replace(/[^a-zA-Z0-9]/g, '_')}-${currentLabel.replace(/[^a-zA-Z0-9]/g, '_')}-QR.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
         }

@@ -467,6 +467,7 @@
         let dishes = JSON.parse(localStorage.getItem('laance_dishes')) || DEFAULT_DISHES;
         let activeCategory = "All";
         let cart = [];
+        let tableFormatted = "Table 01";
         let tableNo = 1;
         let clientId = null;
         let clientData = null;
@@ -474,7 +475,15 @@
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const t = params.get('table');
-            if (t) tableNo = parseInt(t, 10);
+            if (t) {
+                const parsed = parseInt(t, 10);
+                if (!isNaN(parsed)) {
+                    tableNo = parsed;
+                    tableFormatted = parsed < 10 ? `Table 0${parsed}` : `Table ${parsed}`;
+                } else {
+                    tableFormatted = t;
+                }
+            }
 
             // 1. Direct Restaurant Name from QR Code URL (?rest=... or ?name=...)
             const directRestName = params.get('rest') || params.get('name');
@@ -512,8 +521,8 @@
                 }
             }
 
-            document.getElementById('tableTitleBadge').textContent = `TABLE 0${tableNo}`;
-            document.getElementById('trayTableText').textContent = `Table 0${tableNo}`;
+            document.getElementById('tableTitleBadge').textContent = tableFormatted.toUpperCase();
+            document.getElementById('trayTableText').textContent = tableFormatted;
 
             // Apply Custom Design if saved from Dashboard
             applyCustomDesign();
@@ -692,11 +701,15 @@
             const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
 
             const rest = JSON.parse(localStorage.getItem('laance_restaurant')) || {};
+            const params = new URLSearchParams(window.location.search);
+            const currentRestName = clientData ? (clientData.businessName || clientData.name) : (params.get('rest') || rest.name || 'Restaurant');
+
             const newOrder = {
                 orderId: orderId,
                 clientId: clientId || 'DEFAULT',
                 restaurantId: rest.id || 'REST-ROYAL-01',
-                tableNo: `Table 0${tableNo}`,
+                restaurantName: currentRestName,
+                tableNo: tableFormatted,
                 customerPhone: mobile,
                 itemsSummary: summary,
                 totalPrice: total,
@@ -741,6 +754,7 @@
                             orderId: newOrder.orderId,
                             clientId: newOrder.clientId,
                             restaurantId: newOrder.restaurantId,
+                            restaurantName: newOrder.restaurantName,
                             tableNo: newOrder.tableNo,
                             customerPhone: newOrder.customerPhone,
                             itemsSummary: newOrder.itemsSummary,
