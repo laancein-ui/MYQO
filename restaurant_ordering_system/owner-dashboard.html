@@ -1253,9 +1253,11 @@ function renderUsersTable() {
                 <td><span class="badge ${statusBadge}">${u.status}</span></td>
                 <td style="font-size:0.75rem; color:#666;">${u.joinedAt ? new Date(u.joinedAt).toLocaleDateString('en-IN') : '-'}</td>
                 <td>
-                    <div style="display:flex;gap:0.3rem;">
-                        <button class="btn btn-gold btn-sm" onclick="editUser('${u.id}')" title="Edit Client & Payment">✏️ Edit</button>
-                        <button class="btn btn-outline btn-sm" onclick="generateInvoiceForUser('${u.id}')" title="Generate Invoice">🧾 Invoice</button>
+                    <div style="display:flex;gap:0.3rem;flex-wrap:wrap;">
+                        <a href="qr-studio.html?client=${u.id}" class="btn btn-gold btn-sm" title="Generate Table QRs for this client">🔲 QR</a>
+                        <a href="customer-dine.html?client=${u.id}&table=1" target="_blank" class="btn btn-outline btn-sm" title="Open Customer Menu">🍽️ Menu</a>
+                        <a href="live-operations.html?client=${u.id}" target="_blank" class="btn btn-outline btn-sm" title="Kitchen Screen">📺 Kitchen</a>
+                        <button class="btn btn-outline btn-sm" onclick="editUser('${u.id}')" title="Edit Client & Payment">✏️</button>
                         <button class="btn btn-red btn-sm" onclick="deleteUser('${u.id}')" title="Delete">🗑️</button>
                     </div>
                 </td>

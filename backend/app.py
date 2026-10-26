@@ -205,6 +205,65 @@ def get_orders():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+# ─── IN-MEMORY / PERSISTENT CLIENTS & MENU STORE ────────────
+DATA_STORE_PATH = "clients_store.json"
+
+def _load_store():
+    if os.path.exists(DATA_STORE_PATH):
+        try:
+            with open(DATA_STORE_PATH, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"clients": {}, "dishes": {}}
+
+def _save_store(data):
+    try:
+        with open(DATA_STORE_PATH, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+    except Exception as e:
+        print(f"Error saving store: {e}")
+
+_db = _load_store()
+
+@app.route("/api/clients", methods=["GET"])
+def list_clients():
+    return jsonify({"success": True, "clients": list(_db.get("clients", {}).values())})
+
+@app.route("/api/clients", methods=["POST"])
+def register_client():
+    data = request.get_json(force=True)
+    client_id = data.get("id") or data.get("clientId")
+    if not client_id:
+        client_id = f"USR-{len(_db.get('clients', {})) + 1:04d}"
+        data["id"] = client_id
+    _db.setdefault("clients", {})[client_id] = data
+    _save_store(_db)
+    print(f"✅ Synced client {client_id}: {data.get('businessName') or data.get('name')}")
+    return jsonify({"success": True, "client": data}), 201
+
+@app.route("/api/client/<client_id>", methods=["GET"])
+def get_client(client_id):
+    client = _db.get("clients", {}).get(client_id)
+    dishes = _db.get("dishes", {}).get(client_id, [])
+    if client:
+        return jsonify({"success": True, "client": client, "dishes": dishes})
+    return jsonify({
+        "success": True,
+        "client": {"id": client_id, "businessName": client_id, "name": client_id},
+        "dishes": dishes
+    })
+
+@app.route("/api/client/<client_id>/dishes", methods=["POST", "PUT"])
+def save_client_dishes(client_id):
+    data = request.get_json(force=True)
+    dishes = data.get("dishes", []) if isinstance(data, dict) else data
+    _db.setdefault("dishes", {})[client_id] = dishes
+    _save_store(_db)
+    print(f"✅ Saved {len(dishes)} dishes for client {client_id}")
+    return jsonify({"success": True, "clientId": client_id, "count": len(dishes)})
+
+
 # ─── RUN ─────────────────────────────────────────────────────
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))

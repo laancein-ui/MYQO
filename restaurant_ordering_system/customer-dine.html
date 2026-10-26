@@ -479,17 +479,30 @@
             // Multi-Tenant: Load client info from URL param
             clientId = params.get('client');
             if (clientId) {
+                // 1. First check local storage
                 const users = JSON.parse(localStorage.getItem('laance_saas_users')) || [];
                 clientData = users.find(u => u.id === clientId);
                 if (clientData) {
-                    // Load client's custom dishes if they have any
                     const clientDishes = JSON.parse(localStorage.getItem('laance_dishes_' + clientId));
                     if (clientDishes && clientDishes.length > 0) dishes = clientDishes;
-                    // Show client branding
-                    const h1 = document.querySelector('.hero-banner h1');
-                    if (h1 && clientData.businessName) h1.textContent = clientData.businessName.toUpperCase();
-                    const p = document.querySelector('.hero-banner p');
-                    if (p && clientData.businessName) p.textContent = `Welcome to ${clientData.businessName}! Select your food & place your order.`;
+                    applyClientBranding(clientData);
+                }
+
+                // 2. Fetch from Render Backend (Ensures any mobile phone gets the client's custom menu!)
+                if (MYQO_CONFIG.API_URL && !MYQO_CONFIG.API_URL.includes('YOUR-BACKEND')) {
+                    fetch(`${MYQO_CONFIG.API_URL}/api/client/${clientId}`)
+                        .then(r => r.json())
+                        .then(res => {
+                            if (res && res.success && res.client) {
+                                clientData = res.client;
+                                applyClientBranding(clientData);
+                                if (res.dishes && res.dishes.length > 0) {
+                                    dishes = res.dishes;
+                                    renderDishes();
+                                }
+                            }
+                        })
+                        .catch(err => console.log('Live client API sync notice:', err));
                 }
             }
 
@@ -501,6 +514,16 @@
 
             renderDishes();
         });
+
+        function applyClientBranding(c) {
+            const biz = c.businessName || c.name;
+            if (!biz) return;
+            const h1 = document.querySelector('.hero-banner h1');
+            if (h1) h1.textContent = biz.toUpperCase();
+            const p = document.querySelector('.hero-banner p');
+            if (p) p.textContent = `Welcome to ${biz}! Select your food & place your order.`;
+            document.title = `${biz} | Dining Menu`;
+        }
 
         function applyCustomDesign() {
             const design = JSON.parse(localStorage.getItem('laance_menu_design'));

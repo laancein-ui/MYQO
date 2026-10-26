@@ -370,6 +370,15 @@
             <!-- LEFT CONFIGURATION CONTROLS -->
             <div class="config-card">
 
+                <!-- 0. Multi-Tenant: Restaurant / Client Selection -->
+                <div class="config-section" style="background:rgba(212,175,55,0.06); border:1px solid rgba(212,175,55,0.3); padding:1rem 1.2rem; border-radius:12px; margin-bottom:1.5rem;">
+                    <h4 style="color:var(--accent-gold); display:flex; align-items:center; gap:0.5rem;">🏪 Select Restaurant / Client</h4>
+                    <p class="hint">Choose which registered restaurant this table QR is being generated for.</p>
+                    <select id="clientPickerSelect" class="ctrl-input" style="background:#161622; color:#fff; font-weight:700; font-size:0.95rem; margin-top:0.6rem;" onchange="onClientSelectChange(this.value)">
+                        <option value="">Default: Royal Spice Fine Dining</option>
+                    </select>
+                </div>
+
                 <!-- 1. Table Selection & Custom Area Creation -->
                 <div class="config-section">
                     <h4>🪑 1. Select or Create Custom Table / Area</h4>
@@ -499,6 +508,7 @@
         let selectedLogoType = "emoji"; // 'emoji' or 'customImage'
         let selectedEmoji = "⚔️";
         let uploadedLogoImage = null;
+        let selectedClientId = "";
 
         const restaurant = JSON.parse(localStorage.getItem('laance_restaurant')) || {
             name: "Royal Spice Fine Dining",
@@ -507,11 +517,50 @@
         };
 
         document.addEventListener('DOMContentLoaded', () => {
+            initClientPicker();
             const rName = (restaurant.companyName || restaurant.name || "Royal Spice Fine Dining").toUpperCase();
             document.getElementById('bistroName').textContent = rName;
             document.getElementById('waNumberText').textContent = restaurant.whatsapp || "+91 98470 54321";
             selectTable('Table 01', 1);
         });
+
+        function initClientPicker() {
+            const select = document.getElementById('clientPickerSelect');
+            if (!select) return;
+
+            const users = JSON.parse(localStorage.getItem('laance_saas_users')) || [];
+            const params = new URLSearchParams(window.location.search);
+            const clientParam = params.get('client');
+            if (clientParam) selectedClientId = clientParam;
+
+            select.innerHTML = '<option value="">Default: Royal Spice Fine Dining</option>' +
+                users.map(u => `<option value="${u.id}" ${u.id === selectedClientId ? 'selected' : ''}>${u.id} — ${u.businessName || u.name} (${u.phone})</option>`).join('');
+
+            if (selectedClientId) {
+                const found = users.find(u => u.id === selectedClientId);
+                if (found) applyClientToStand(found);
+            }
+        }
+
+        function onClientSelectChange(clientId) {
+            selectedClientId = clientId;
+            const users = JSON.parse(localStorage.getItem('laance_saas_users')) || [];
+            const client = users.find(u => u.id === clientId);
+            if (client) {
+                applyClientToStand(client);
+            } else {
+                document.getElementById('bistroName').textContent = (restaurant.companyName || restaurant.name || "Royal Spice Fine Dining").toUpperCase();
+                document.getElementById('waNumberText').textContent = restaurant.whatsapp || "+91 98470 54321";
+            }
+            selectTable(currentLabel, currentTableNum);
+        }
+
+        function applyClientToStand(c) {
+            const name = (c.businessName || c.name).toUpperCase();
+            document.getElementById('bistroName').textContent = name;
+            document.getElementById('standCrest').textContent = selectedEmoji + " " + (c.businessName ? c.businessName.split(' ')[0].toUpperCase() : 'LAANCE');
+            document.getElementById('waNumberText').textContent = c.phone || restaurant.whatsapp;
+        }
 
         function selectTable(label, num) {
             currentLabel = label;
@@ -530,7 +579,8 @@
             const origin = window.location.origin;
             const pathname = window.location.pathname;
             const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
-            const targetUrl = `${origin}${basePath}customer-dine.html?table=${currentTableNum}`;
+            const clientQuery = selectedClientId ? `&client=${selectedClientId}` : '';
+            const targetUrl = `${origin}${basePath}customer-dine.html?table=${currentTableNum}${clientQuery}`;
             document.getElementById('targetUrlBox').value = targetUrl;
 
             generateCompositeQR(targetUrl);
