@@ -6,18 +6,18 @@
     <title>LAANCE SaaS | Restaurant Control Hub &amp; Settings</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-black: #08080b;
             --bg-card: #121218;
             --bg-card-alt: #181822;
             --text-white: #ffffff;
-            --text-muted: #9e9ea7;
-            --accent-gold: #d4af37;
-            --accent-gold-bright: #f3ce49;
-            --accent-orange: #ff7a18;
-            --accent-green: #10b981;
+            --text-muted: #8b8b9e;
+            --accent-gold: #c9a86a;
+            --accent-gold-bright: #e6c98a;
+            --accent-orange: #ff6b1a;
+            --accent-green: #2ad4a0;
             --accent-blue: #3b82f6;
             --border-dark: rgba(255, 255, 255, 0.1);
             --font-heading: 'Cinzel', serif;
@@ -584,147 +584,506 @@
             .restaurant-header-banner { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
             .header-right { align-items: flex-start; }
         }
+    
+        /* Control Hub Header (Matches Image) */
+        .hub-top-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2.5rem 0 1.6rem 0;
+            border-bottom: none;
+        }
+        .hub-main-heading {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.4rem, 4vw, 3.2rem);
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            margin: 0;
+            line-height: 1;
+        }
+        .hub-top-meta {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .hub-os-label {
+            font-family: 'JetBrains Mono', monospace, sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.35);
+            font-weight: 600;
+        }
+        .hub-nav-pills {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .hub-nav-pill {
+            background: #14141f;
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #8b8b9e;
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .hub-nav-pill:hover {
+            color: #fff;
+            border-color: rgba(255,255,255,0.2);
+            background: #1b1b2a;
+        }
+        .hub-nav-pill.text-red {
+            color: #f87171;
+            border-color: rgba(239,68,68,0.25);
+        }
+        .hub-nav-pill.text-red:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        /* Banner Card (Matches Image) */
+        .restaurant-header-banner {
+            background: #111219 !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 20px !important;
+            padding: 1.8rem 2.2rem !important;
+            margin-bottom: 2.2rem !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.45) !important;
+            position: relative;
+        }
+        .restaurant-header-banner::before {
+            display: none !important;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.4rem;
+        }
+        .restaurant-avatar {
+            width: 60px !important;
+            height: 60px !important;
+            border-radius: 16px !important;
+            background: #171822 !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 1.4rem !important;
+            font-weight: 800 !important;
+            color: #ffffff !important;
+            letter-spacing: 0.04em !important;
+            box-shadow: none !important;
+            flex-shrink: 0;
+        }
+        .name-id-row {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            margin-bottom: 0.45rem;
+        }
+        .restaurant-name-serif {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+        }
+        .id-badge-gold {
+            background: rgba(202, 166, 51, 0.12);
+            border: 1px solid rgba(202, 166, 51, 0.38);
+            color: #caa633;
+            padding: 0.2rem 0.65rem;
+            border-radius: 9999px;
+            font-size: 0.74rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .header-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #8b8b9e;
+            font-size: 0.84rem;
+            flex-wrap: wrap;
+        }
+        .meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .meta-dot {
+            color: rgba(255,255,255,0.25);
+            font-size: 0.8rem;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .trial-pill-green {
+            background-color: #11a372;
+            color: #000000;
+            padding: 0.48rem 1.15rem;
+            border-radius: 9999px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            box-shadow: 0 4px 15px rgba(17, 163, 114, 0.3);
+            white-space: nowrap;
+        }
+        .trial-pill-green .bullet-dot {
+            font-size: 0.85rem;
+            line-height: 1;
+        }
+        .btn-edit-settings-white {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 0.52rem 1.35rem;
+            border-radius: 9999px;
+            font-size: 0.84rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+            white-space: nowrap;
+        }
+        .btn-edit-settings-white:hover {
+            background-color: #f0f0f5;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.35);
+        }
+
+        /* 4 Action Cards Grid (Exact To Image) */
+        .hub-actions-grid {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 1.3rem !important;
+            margin-bottom: 3.5rem !important;
+        }
+        .hub-action-card {
+            background: #111219 !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 20px !important;
+            padding: 1.8rem 1.6rem !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            min-height: 330px !important;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35) !important;
+            text-decoration: none !important;
+        }
+        .hub-action-card:hover {
+            transform: translateY(-4px) !important;
+            border-color: rgba(255, 255, 255, 0.18) !important;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6) !important;
+            background: #151622 !important;
+        }
+        .card-inner-top {
+            display: flex;
+            flex-direction: column;
+        }
+        .card-head-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.6rem;
+        }
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.32rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+        }
+        .pill-orange {
+            background-color: #f26519;
+            color: #000000;
+        }
+        .pill-red {
+            background-color: #ef4444;
+            color: #ffffff;
+        }
+        .pill-yellow {
+            background-color: #caa633;
+            color: #000000;
+        }
+        .pill-purple {
+            background-color: #895bf1;
+            color: #ffffff;
+        }
+        .icon-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.65);
+        }
+        .card-title {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 1.3rem !important;
+            font-weight: 800 !important;
+            color: #ffffff !important;
+            margin-bottom: 0.6rem !important;
+            line-height: 1.25 !important;
+        }
+        .card-desc {
+            font-size: 0.82rem !important;
+            color: #8b8b9e !important;
+            line-height: 1.55 !important;
+            margin-bottom: 1.6rem !important;
+        }
+        .card-inner-bottom {
+            margin-top: auto;
+        }
+        .btn-card-action {
+            width: 100% !important;
+            height: 48px !important;
+            border-radius: 12px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.5rem !important;
+            font-size: 0.92rem !important;
+            font-weight: 800 !important;
+            text-decoration: none !important;
+            border: none !important;
+            cursor: pointer !important;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+        .btn-card-action:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+        .btn-card-action .arrow {
+            font-size: 1.15rem;
+            transition: transform 0.2s;
+        }
+        .btn-card-action:hover .arrow {
+            transform: translateX(4px);
+        }
+        .btn-orange {
+            background-color: #f26519 !important;
+            color: #000000 !important;
+            box-shadow: 0 4px 15px rgba(242, 101, 25, 0.3) !important;
+        }
+        .btn-dark-gold {
+            background: rgba(255, 255, 255, 0.02) !important;
+            border: 1px solid rgba(202, 166, 51, 0.35) !important;
+            color: #caa633 !important;
+        }
+        .btn-dark-gold:hover {
+            background: rgba(202, 166, 51, 0.1) !important;
+            border-color: #caa633 !important;
+        }
+        .btn-gold {
+            background-color: #caa633 !important;
+            color: #000000 !important;
+            box-shadow: 0 4px 15px rgba(202, 166, 51, 0.3) !important;
+        }
+        .btn-purple {
+            background-color: #895bf1 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 15px rgba(137, 91, 241, 0.35) !important;
+        }
+
+        @media (max-width: 1024px) {
+            .hub-actions-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .restaurant-header-banner { flex-direction: column !important; align-items: flex-start !important; gap: 1.4rem !important; }
+            .header-right { width: 100%; justify-content: space-between; }
+        }
+        @media (max-width: 640px) {
+            .hub-actions-grid { grid-template-columns: 1fr !important; }
+            .hub-top-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        }
+
     </style>
 </head>
 <body>
 
-    <!-- TOP NAVBAR -->
-    <header class="top-navbar">
-        <a href="index.html" class="nav-brand">
-            <span class="crest">⚔️</span>
-            <div>
-                <span class="brand">LAANCE</span>
-                <span class="sub">STUDIO AGATHO</span>
-            </div>
-        </a>
-
-        <nav class="nav-links">
-            <a href="dashboard.html" class="active">Control Hub</a>
-            <a href="menu-builder.html">Menu Items</a>
-            <a href="qr-studio.html">QR Studio</a>
-            <a href="owner-performance.html">👑 Owner Performance</a>
-            <button type="button" onclick="openSettingsModal('profile')">⚙️ Settings</button>
-            <a href="live-operations.html">Live Operations</a>
-            <a href="customer-dine.html?table=1" target="_blank">Customer Preview ↗</a>
-        </nav>
-
-        <div class="nav-right-user">
-            <div class="user-chip">
-                <span class="dot"></span>
-                <span id="navRestIdBadge">REST-ROYAL-01</span>
-            </div>
-            <a href="login.html" class="btn-logout" title="Sign out of restaurant session">Sign Out</a>
-        </div>
-    </header>
-
-    <div class="container">
+        <div class="container">
         
-        <!-- RESTAURANT PROFILE BANNER -->
+        <!-- CONTROL HUB TOP BAR (EXACT TO USER IMAGE) -->
+        <header class="hub-top-header">
+            <h1 class="hub-main-heading">Control Hub</h1>
+            <div class="hub-top-meta">
+                <span class="hub-os-label">LAANCE OS v2.4 &bull; PARIS REGION</span>
+                <div class="hub-nav-pills">
+                    <a href="index.html" class="hub-nav-pill">&larr; Portal</a>
+                    <a href="live-operations.html" class="hub-nav-pill">Live Kitchen</a>
+                    <a href="login.html" class="hub-nav-pill text-red">Sign Out</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- RESTAURANT PROFILE BANNER (EXACT TO USER IMAGE) -->
         <section class="restaurant-header-banner">
             <div class="header-left">
-                <div class="restaurant-avatar" id="avatarDisplay">👑</div>
+                <div class="restaurant-avatar" id="avatarDisplay">LL</div>
                 <div class="header-title-box">
-                    <h1>
-                        <span id="bannerRestName">Royal Spice Fine Dining</span>
-                        <span class="id-badge" id="bannerRestId">REST-ROYAL-01</span>
-                    </h1>
-                    <div class="header-meta">
-                        <span id="bannerAddress">📍 42 Heritage Boulevard, Marine Promenade, Kochi</span>
-                        <span id="bannerPhone">📱 +91 98470 54321</span>
-                        <span id="bannerGmail">✉️ orders@royalspice.com</span>
+                    <div class="name-id-row">
+                        <h2 class="restaurant-name-serif" id="bannerRestName">La Lune French Bistro</h2>
+                        <span class="id-badge-gold" id="bannerRestId">REST-PARIS-01</span>
+                    </div>
+                    <div class="header-meta-row">
+                        <span class="meta-item">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span id="bannerAddress">12 Rue de Rivoli, 75001 Paris, France</span>
+                        </span>
+                        <span class="meta-item">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            <span id="bannerPhone">+33 1 23 45 67 89</span>
+                        </span>
+                        <span class="meta-dot">&bull;</span>
+                        <span class="meta-item">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                            <span id="bannerGmail">ops@lalune.paris</span>
+                        </span>
                     </div>
                 </div>
             </div>
             <div class="header-right">
-                <div class="trial-badge">
-                    <span>✨</span>
-                    <span>1-Month Free Trial Active &middot; ₹0</span>
+                <div class="trial-pill-green">
+                    <span class="bullet-dot">●</span>
+                    <span>FREE TRIAL &bull; 12 DAYS LEFT</span>
                 </div>
-                <button type="button" class="btn-hub-action btn-action-primary" onclick="openSettingsModal('profile')" style="padding:0.45rem 1.2rem; font-size:0.8rem; width:auto;">
-                    ⚙️ Edit Settings &amp; Integrations
+                <button type="button" class="btn-edit-settings-white" onclick="openSettingsModal('profile')">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                    <span>Edit Settings</span>
                 </button>
             </div>
         </section>
 
-        <!-- 4 MAIN ACTION CARDS (ALL USER REQUESTS FULFILLED) -->
-        <div class="section-header">
-            <h2>🚀 Restaurant Command Center</h2>
-            <p>Access your primary restaurant tools, owner financial intelligence, and integrations.</p>
-        </div>
-
+        <!-- 4 ACTION CARDS (EXACT TO USER IMAGE) -->
         <div class="hub-actions-grid">
             
-            <!-- BUTTON 1: Add Restaurant Items Page -->
+            <!-- Card 1: Menu Architect -->
             <div class="hub-action-card">
-                <div>
-                    <div class="hub-card-top">
-                        <div class="hub-icon-wrap icon-orange">🍽️</div>
-                        <span class="tag-pill tag-pill-gold">MENU BUILDER</span>
+                <div class="card-inner-top">
+                    <div class="card-head-row">
+                        <span class="badge-pill pill-orange">Menu Builder</span>
+                        <div class="icon-circle">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 2v20M2 2v8a4 4 0 0 0 4 4h0a4 4 0 0 0 4-4V2M6 14v8"></path>
+                            </svg>
+                        </div>
                     </div>
-                    <h3>Add Restaurant Items</h3>
-                    <p>Add new dishes, upload appetizing photos, specify pricing, set category tags and active cooking times.</p>
+                    <h3 class="card-title">Menu Architect</h3>
+                    <p class="card-desc">Craft, price, and schedule dishes with live sync to QR and KDS. Photo, allergens, and stock.</p>
                 </div>
-                <div>
-                    <a href="menu-builder.html" class="btn-hub-action btn-action-orange">
-                        Open Menu Items Builder &rarr;
+                <div class="card-inner-bottom">
+                    <a href="menu-builder.html" class="btn-card-action btn-orange">
+                        <span>Open Builder</span>
+                        <span class="arrow">&rarr;</span>
                     </a>
                 </div>
             </div>
 
-            <!-- BUTTON 2: Check Owner Performance (Opens Dedicated Page with Graphs & Reports!) -->
+            <!-- Card 2: Performance Vault -->
             <div class="hub-action-card">
-                <div>
-                    <div class="hub-card-top">
-                        <div class="hub-icon-wrap icon-gold">👑</div>
-                        <span class="tag-pill tag-pill-locked">🔒 OWNER ONLY</span>
+                <div class="card-inner-top">
+                    <div class="card-head-row">
+                        <span class="badge-pill pill-red">Owner Only</span>
+                        <div class="icon-circle">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14v2H5z"></path>
+                            </svg>
+                        </div>
                     </div>
-                    <h3>Check Owner Performance</h3>
-                    <p>Opens dedicated graphs page with Day, Week, Month, Year reports, and item sales percentage matrix.</p>
+                    <h3 class="card-title">Performance Vault</h3>
+                    <p class="card-desc">Owner-only P&L, labor cost, and reward controls. Requires separate KMS password.</p>
                 </div>
-                <div>
-                    <a href="owner-performance.html" class="btn-hub-action btn-action-lock">
-                        📈 Open Performance &amp; Graphs &rarr;
+                <div class="card-inner-bottom">
+                    <a href="owner-performance.html" class="btn-card-action btn-dark-gold">
+                        <span>Enter Vault</span>
+                        <span class="arrow">&rarr;</span>
                     </a>
                 </div>
             </div>
 
-            <!-- BUTTON 3: QR Code Generator & Studio with Logo -->
+            <!-- Card 3: QR Atelier -->
             <div class="hub-action-card">
-                <div>
-                    <div class="hub-card-top">
-                        <div class="hub-icon-wrap icon-blue">📱</div>
-                        <span class="tag-pill tag-pill-gold">QR STUDIO</span>
+                <div class="card-inner-top">
+                    <div class="card-head-row">
+                        <span class="badge-pill pill-yellow">QR Studio</span>
+                        <div class="icon-circle">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="3" height="3"></rect>
+                                <rect x="18" y="18" width="3" height="3"></rect>
+                            </svg>
+                        </div>
                     </div>
-                    <h3>Generate QR with Logo</h3>
-                    <p>Create table QR codes with your restaurant logo embedded in the center and download printable stand cards.</p>
+                    <h3 class="card-title">QR Atelier</h3>
+                    <p class="card-desc">Generate table QRs with brand mark, color theme, and custom destination. Print-ready PNG.</p>
                 </div>
-                <div>
-                    <a href="qr-studio.html" class="btn-hub-action btn-action-primary">
-                        Open QR Code Studio &rarr;
+                <div class="card-inner-bottom">
+                    <a href="qr-studio.html" class="btn-card-action btn-gold">
+                        <span>Generate QR</span>
+                        <span class="arrow">&rarr;</span>
                     </a>
                 </div>
             </div>
 
-            <!-- BUTTON 4: Settings & Google Sheets / Gmail Integration -->
+            <!-- Card 4: System Settings -->
             <div class="hub-action-card">
-                <div>
-                    <div class="hub-card-top">
-                        <div class="hub-icon-wrap icon-purple">⚙️</div>
-                        <span class="tag-pill tag-pill-green">INTEGRATIONS</span>
+                <div class="card-inner-top">
+                    <div class="card-head-row">
+                        <span class="badge-pill pill-purple">Integrations</span>
+                        <div class="icon-circle">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="4" y1="21" x2="4" y2="14"></line>
+                                <line x1="4" y1="10" x2="4" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12" y2="3"></line>
+                                <line x1="20" y1="21" x2="20" y2="16"></line>
+                                <line x1="20" y1="12" x2="20" y2="3"></line>
+                                <line x1="1" y1="14" x2="7" y2="14"></line>
+                                <line x1="9" y1="8" x2="15" y2="8"></line>
+                                <line x1="17" y1="16" x2="23" y2="16"></line>
+                            </svg>
+                        </div>
                     </div>
-                    <h3>Settings &amp; Integrations</h3>
-                    <p>Edit profile, change passwords, setup Gmail order dispatch, and connect Google Sheets with Apps Script Code Generator.</p>
+                    <h3 class="card-title">System Settings</h3>
+                    <p class="card-desc">Connect WhatsApp alerts, printers, and payment providers. Manage team access and logs.</p>
                 </div>
-                <div>
-                    <button type="button" class="btn-hub-action btn-action-purple" onclick="openSettingsModal('sheets')">
-                        Open Settings &amp; Sheet Hub &rarr;
+                <div class="card-inner-bottom">
+                    <button type="button" class="btn-card-action btn-purple" onclick="openSettingsModal('sheets')">
+                        <span>Configure</span>
+                        <span class="arrow">&rarr;</span>
                     </button>
                 </div>
             </div>
 
         </div>
-
-        <!-- ========================================================================= -->
+<!-- ========================================================================= -->
         <!-- CUSTOMER QR SCAN MENU DESIGN EDITOR -->
         <!-- ========================================================================= -->
         <div class="section-header">
@@ -760,7 +1119,7 @@
                         <p class="hint">Header text displayed at the top of the customer's phone when scanning.</p>
 
                         <label style="font-size:0.8rem; font-weight:700; color:#ccc; display:block; margin-bottom:0.3rem;">Customer-Facing Restaurant Name</label>
-                        <input type="text" id="editMenuTitle" class="ctrl-input" value="Royal Spice Fine Dining" oninput="updateLivePreview()" />
+                        <input type="text" id="editMenuTitle" class="ctrl-input" value="La Lune French Bistro" oninput="updateLivePreview()" />
 
                         <label style="font-size:0.8rem; font-weight:700; color:#ccc; display:block; margin-bottom:0.3rem;">Welcome Tagline / Subtitle</label>
                         <input type="text" id="editMenuTagline" class="ctrl-input" value="Artisanal Flavors &amp; Contactless Table QR Dining" oninput="updateLivePreview()" />
@@ -866,7 +1225,7 @@
                             <div class="mock-banner" id="mockBanner">
                                 <div class="mock-banner-content">
                                     <div class="mock-table-pill" id="mockTablePill">TABLE 01 LOCKED</div>
-                                    <h2 class="mock-rest-name" id="mockRestName">Royal Spice Fine Dining</h2>
+                                    <h2 class="mock-rest-name" id="mockRestName">La Lune French Bistro</h2>
                                     <p class="mock-tagline" id="mockTagline">Artisanal Flavors &amp; Contactless Table QR Dining</p>
                                 </div>
                             </div>
@@ -1173,13 +1532,13 @@
     <!-- JAVASCRIPT LOGIC -->
     <script>
         let currentRestaurant = JSON.parse(localStorage.getItem('laance_restaurant')) || {
-            name: "Royal Spice Fine Dining",
-            companyName: "Royal Spice Fine Dining",
-            id: "REST-ROYAL-01",
-            phone: "+91 98470 54321",
-            whatsapp: "+91 98470 54321",
+            name: "La Lune French Bistro",
+            companyName: "La Lune French Bistro",
+            id: "REST-PARIS-01",
+            phone: "+33 1 23 45 67 89",
+            whatsapp: "+33 1 23 45 67 89",
             address: "42 Heritage Boulevard, Marine Promenade, Kochi",
-            email: "orders@royalspice.com",
+            email: "ops@lalune.paris",
             ownerGmail: "owner.bistro@gmail.com",
             googleSheetId: "https://script.google.com/macros/s/AKfycby-demo-sheet-sync/exec",
             ownerPerfPassword: "owner777",
@@ -1187,7 +1546,7 @@
         };
 
         let currentDesign = JSON.parse(localStorage.getItem('laance_menu_design')) || {
-            title: currentRestaurant.companyName || currentRestaurant.name || "Royal Spice Fine Dining",
+            title: currentRestaurant.companyName || currentRestaurant.name || "La Lune French Bistro",
             tagline: "Artisanal Flavors & Contactless Table QR Dining",
             announcement: "🎉 Flat 10% off on digital orders! Earn 1 loyalty point per ₹100 spent.",
             accentColor: "#d4af37",
@@ -1206,18 +1565,31 @@
         });
 
         function renderHeader() {
-            const name = currentRestaurant.companyName || currentRestaurant.name || "Royal Spice Fine Dining";
-            const id = currentRestaurant.id || "REST-ROYAL-01";
-            const addr = currentRestaurant.address || "Heritage Promenade, Kochi";
-            const ph = currentRestaurant.phone || currentRestaurant.whatsapp || "+91 98470 54321";
-            const gmail = currentRestaurant.ownerGmail || currentRestaurant.email || "orders@royalspice.com";
+            const name = currentRestaurant.companyName || currentRestaurant.name || "La Lune French Bistro";
+            const id = currentRestaurant.id || "REST-PARIS-01";
+            const addr = currentRestaurant.address || "12 Rue de Rivoli, 75001 Paris, France";
+            const ph = currentRestaurant.phone || currentRestaurant.whatsapp || "+33 1 23 45 67 89";
+            const gmail = currentRestaurant.ownerGmail || currentRestaurant.email || "ops@lalune.paris";
 
-            document.getElementById('bannerRestName').textContent = name;
-            document.getElementById('bannerRestId').textContent = id;
-            document.getElementById('navRestIdBadge').textContent = id;
-            document.getElementById('bannerAddress').textContent = "📍 " + addr;
-            document.getElementById('bannerPhone').textContent = "📱 " + ph;
-            document.getElementById('bannerGmail').textContent = "✉️ " + gmail;
+            const nameEl = document.getElementById('bannerRestName');
+            if (nameEl) nameEl.textContent = name;
+            const idEl = document.getElementById('bannerRestId');
+            if (idEl) idEl.textContent = id;
+            const navIdEl = document.getElementById('navRestIdBadge');
+            if (navIdEl) navIdEl.textContent = id;
+            const addrEl = document.getElementById('bannerAddress');
+            if (addrEl) addrEl.textContent = addr;
+            const phoneEl = document.getElementById('bannerPhone');
+            if (phoneEl) phoneEl.textContent = ph;
+            const gmailEl = document.getElementById('bannerGmail');
+            if (gmailEl) gmailEl.textContent = gmail;
+
+            const avatarEl = document.getElementById('avatarDisplay');
+            if (avatarEl) {
+                const words = name.trim().split(/\s+/);
+                const initials = words.length >= 2 ? (words[0][0] + words[1][0]).toUpperCase() : words[0].substring(0, 2).toUpperCase();
+                avatarEl.textContent = initials || "LL";
+            }
         }
 
         function loadDesignIntoControls() {
@@ -1276,6 +1648,18 @@
             document.querySelectorAll('.color-swatch').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             updateLivePreview();
+
+            // Auto-save immediately to localStorage so all connected screens update
+            localStorage.setItem('laance_theme_color', color);
+            localStorage.setItem('laance_menu_design', JSON.stringify(currentDesign));
+
+            // Broadcast theme change to live-operations.html and customer-dine.html
+            try {
+                const bc = new BroadcastChannel('laance_theme_channel');
+                bc.postMessage({ type: 'theme_update', accentColor: color, design: currentDesign });
+            } catch(e) {}
+
+            showToast('🎨 Theme updated to ' + (btn.getAttribute('title') || color) + '! Synced with Live Kitchen.');
         }
 
         function selectBannerPreset(url, el) {
@@ -1294,8 +1678,24 @@
             currentDesign.showTableLock = document.getElementById('toggleTableLock').checked;
             currentDesign.showCookingTime = document.getElementById('toggleCookingTime').checked;
 
+            const accent = currentDesign.accentColor || '#caa633';
+            localStorage.setItem('laance_theme_color', accent);
             localStorage.setItem('laance_menu_design', JSON.stringify(currentDesign));
-            showToast('🎉 QR Menu design saved! Applied to guest dining experience.');
+
+            // Sync restaurant names
+            if (currentDesign.title) {
+                currentRestaurant.companyName = currentDesign.title;
+                currentRestaurant.name = currentDesign.title;
+                localStorage.setItem('laance_current_restaurant', JSON.stringify(currentRestaurant));
+                localStorage.setItem('laance_restaurant', JSON.stringify(currentRestaurant));
+            }
+
+            try {
+                const bc = new BroadcastChannel('laance_theme_channel');
+                bc.postMessage({ type: 'theme_update', accentColor: accent, design: currentDesign, restaurant: currentRestaurant });
+            } catch(e) {}
+
+            showToast('🎉 QR Menu & Theme saved! Live Kitchen & Guest Menu synced.');
         }
 
         // =========================================================
@@ -1327,7 +1727,7 @@
 
         function populateSettingsFields() {
             document.getElementById('setRestName').value = currentRestaurant.companyName || currentRestaurant.name || "";
-            document.getElementById('setRestId').value = currentRestaurant.id || "REST-ROYAL-01";
+            document.getElementById('setRestId').value = currentRestaurant.id || "REST-PARIS-01";
             document.getElementById('setRestPhone').value = currentRestaurant.phone || currentRestaurant.whatsapp || "";
             document.getElementById('setRestEmail').value = currentRestaurant.email || "";
             document.getElementById('setRestAddress').value = currentRestaurant.address || "";
@@ -1446,7 +1846,7 @@
         // GOOGLE APPS SCRIPT CODE GENERATOR (USER REQUESTED!)
         // =========================================================
         function generateAppsScriptCode() {
-            const rName = currentRestaurant.companyName || currentRestaurant.name || "Royal Spice Fine Dining";
+            const rName = currentRestaurant.companyName || currentRestaurant.name || "La Lune French Bistro";
             const targetGmail = currentRestaurant.ownerGmail || currentRestaurant.email || "owner.bistro@gmail.com";
             const code = `/**
  * =======================================================================

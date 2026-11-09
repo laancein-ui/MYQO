@@ -13,11 +13,11 @@
             --bg-card: #121218;
             --bg-card-alt: #181824;
             --text-white: #ffffff;
-            --text-muted: #9e9ea7;
-            --accent-gold: #d4af37;
-            --accent-gold-bright: #f3ce49;
-            --accent-orange: #ff7a18;
-            --accent-green: #10b981;
+            --text-muted: #8b8b9e;
+            --accent-gold: #c9a86a;
+            --accent-gold-bright: #e6c98a;
+            --accent-orange: #ff6b1a;
+            --accent-green: #2ad4a0;
             --border-dark: rgba(255, 255, 255, 0.12);
             --font-heading: 'Cinzel', serif;
             --font-sans: 'Plus Jakarta Sans', sans-serif;
@@ -733,7 +733,7 @@
                 localStorage.setItem('laance_saas_users', JSON.stringify(users));
 
                 // Also save to Render Cloud Backend
-                const apiUrl = localStorage.getItem('myqo_api_url') || 'https://myqo-backend.onrender.com';
+                const apiUrl = localStorage.getItem('myqo_api_url') || 'https://myqo-backend-x8eo.onrender.com';
                 try {
                     fetch(`${apiUrl}/api/clients`, {
                         method: 'POST',

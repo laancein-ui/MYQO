@@ -4,17 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LAANCE | Customer Dining Menu</title>
+    <script>
+        // Redirect to SaaS cover/first page if not directly accessing a table QR scan
+        const _params = new URLSearchParams(window.location.search);
+        if (!_params.has('table') && !_params.has('qr') && !_params.has('dine')) {
+            window.location.replace("index.html");
+        }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-black: #000000;
-            --bg-card: #121217;
+            --bg-black: #050507;
+            --bg-card: #14141f;
             --text-white: #ffffff;
-            --text-muted: #9e9ea7;
-            --accent-gold: #d4af37;
-            --accent-gold-bright: #f3ce49;
+            --text-muted: #8b8b9e;
+            --accent-gold: #c9a86a;
+            --accent-gold-bright: #e6c98a;
             --border-dark: rgba(255, 255, 255, 0.12);
             --font-heading: 'Cinzel', serif;
             --font-serif: 'Playfair Display', serif;
@@ -311,7 +318,7 @@
 <body>
 
     <header class="top-navbar">
-        <a href="qr-studio.html" class="nav-brand">
+        <a href="index.html" class="nav-brand" title="Back to Home">
             <span class="crest">⚔️</span>
             <div>
                 <span class="brand">LAANCE</span>
@@ -412,8 +419,8 @@
     <script>
         // 🔧 CONFIGURATION — Update these after setting up Pusher & Render
         const MYQO_CONFIG = {
-            // Your Render backend URL (e.g., https://myqo-backend.onrender.com)
-            API_URL: localStorage.getItem('myqo_api_url') || 'https://myqo-backend.onrender.com',
+            // Your Render backend URL
+            API_URL: localStorage.getItem('myqo_api_url') || 'https://myqo-backend-x8eo.onrender.com',
             // Your Pusher Key (from pusher.com dashboard)
             PUSHER_KEY: localStorage.getItem('myqo_pusher_key') || '6022aa162db803a7b9e7',
             PUSHER_CLUSTER: localStorage.getItem('myqo_pusher_cluster') || 'ap2'

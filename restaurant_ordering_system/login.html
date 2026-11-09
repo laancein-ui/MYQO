@@ -6,20 +6,20 @@
     <title>LAANCE SaaS | Sign In &amp; Restaurant Registration</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-black: #000000;
-            --bg-card: #121217;
-            --bg-card-alt: #171720;
+            --bg-black: #050507;
+            --bg-card: #14141f;
+            --bg-card-alt: #1a1a2a;
             --text-white: #ffffff;
-            --text-muted: #9e9ea7;
-            --accent-gold: #d4af37;
-            --accent-gold-bright: #f3ce49;
-            --accent-orange: #ff7a18;
-            --accent-green: #10b981;
-            --border-dark: rgba(255, 255, 255, 0.12);
-            --font-heading: 'Cinzel', serif;
+            --text-muted: #8b8b9e;
+            --accent-gold: #c9a86a;
+            --accent-gold-bright: #e6c98a;
+            --accent-orange: #ff6b1a;
+            --accent-green: #2ad4a0;
+            --border-dark: #222233;
+            --font-heading: 'Fraunces', serif;
             --font-sans: 'Plus Jakarta Sans', sans-serif;
             --radius-pill: 9999px;
             --radius-card: 20px;
@@ -102,36 +102,91 @@
 
         /* Left Branding Panel */
         .info-side {
-            background: #0d0d12;
-            padding: 3.5rem 3rem;
-            border-right: 1px solid var(--border-dark);
+            background: #0b0b0e;
+            padding: 3.8rem 3rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-start;
         }
 
-        .info-side .crest-lg { font-size: 2.5rem; margin-bottom: 0.8rem; }
-        .info-side h2 { font-family: var(--font-heading); font-size: 1.7rem; color: var(--accent-gold); margin-bottom: 0.8rem; line-height: 1.25; }
-        .info-side p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.65; margin-bottom: 2rem; }
+        .portal-brand-block {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-bottom: 1.8rem;
+        }
+        .portal-brand-white {
+            font-family: var(--font-sans);
+            font-size: 2.7rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+            line-height: 1.05;
+            text-transform: uppercase;
+        }
+        .portal-brand-gold {
+            font-family: var(--font-sans);
+            font-size: 2.7rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            line-height: 1.05;
+            color: #c99d5f;
+            background: linear-gradient(180deg, #dfbc7a 0%, #be904f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
 
-        .perks-list { display: flex; flex-direction: column; gap: 1.1rem; margin-bottom: 2rem; }
-        .perk { display: flex; gap: 0.8rem; align-items: flex-start; }
-        .perk .chk { color: var(--accent-green); font-weight: 800; font-size: 1.1rem; line-height: 1.2; }
-        .perk strong { color: #fff; font-size: 0.92rem; display: block; margin-bottom: 0.15rem; }
-        .perk p { color: #888; font-size: 0.82rem; margin: 0; line-height: 1.4; }
+        .portal-brand-sub {
+            color: #8c8c9a;
+            font-size: 0.98rem;
+            line-height: 1.6;
+            margin-bottom: 3.2rem;
+            font-weight: 400;
+        }
 
-        .security-badge {
-            background: rgba(212, 175, 55, 0.08);
-            border: 1px solid rgba(212, 175, 55, 0.25);
-            border-radius: 12px;
-            padding: 1rem 1.2rem;
+        .portal-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+        }
+        .portal-feature-item {
             display: flex;
             align-items: center;
-            gap: 0.9rem;
+            justify-content: space-between;
+            gap: 1rem;
         }
-        .security-badge .icon { font-size: 1.4rem; color: var(--accent-gold); }
-        .security-badge .text { font-size: 0.8rem; color: #b8b8c2; line-height: 1.4; }
-        .security-badge strong { color: var(--accent-gold); }
+        .portal-feature-left {
+            display: flex;
+            align-items: center;
+            gap: 1.15rem;
+        }
+        .portal-feature-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #90909e;
+            flex-shrink: 0;
+        }
+        .portal-feature-label {
+            font-size: 0.96rem;
+            font-weight: 500;
+            color: #ebebee;
+            letter-spacing: -0.01em;
+        }
+        .portal-feature-chk {
+            color: rgba(255, 255, 255, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
 
         /* Right Form Panel */
         .form-side {
@@ -418,47 +473,92 @@
             <!-- LEFT INFO BRANDING SIDE -->
             <div class="info-side">
                 <div>
-                    <div class="crest-lg">⚔️</div>
-                    <h2>LAANCE RESTAURANT PORTAL</h2>
-                    <p>Complete QR-powered contactless dining ecosystem, live kitchen order dispatch, automated midnight audits, and owner intelligence control center.</p>
-
-                    <div class="perks-list">
-                        <div class="perk">
-                            <span class="chk">✓</span>
-                            <div>
-                                <strong>1-Month Free Subscription Included</strong>
-                                <p>₹0 setup fee &middot; 30-day unrestricted trial of full system suite.</p>
-                            </div>
-                        </div>
-                        <div class="perk">
-                            <span class="chk">✓</span>
-                            <div>
-                                <strong>Instant Table QR Code Generator</strong>
-                                <p>Generate printable branded QR cards for all tables in 1-click.</p>
-                            </div>
-                        </div>
-                        <div class="perk">
-                            <span class="chk">✓</span>
-                            <div>
-                                <strong>Live WhatsApp Kitchen Dispatch</strong>
-                                <p>Orders directly stream to chef &amp; owner WhatsApp immediately.</p>
-                            </div>
-                        </div>
-                        <div class="perk">
-                            <span class="chk">✓</span>
-                            <div>
-                                <strong>Owner Performance &amp; Analytics Lock</strong>
-                                <p>Protected owner-only revenue and attendance statistics with master password.</p>
-                            </div>
-                        </div>
+                    <div class="portal-brand-block">
+                        <div class="portal-brand-white">LAANCE</div>
+                        <div class="portal-brand-gold">RESTAURANT</div>
+                        <div class="portal-brand-gold">PORTAL</div>
                     </div>
-                </div>
+                    <p class="portal-brand-sub">Complete QR-powered contactless dining solution. Built for high-volume operations, trusted by enterprise hospitality groups.</p>
 
-                <div class="security-badge">
-                    <span class="icon">🔒</span>
-                    <div class="text">
-                        <strong>Encrypted Dual-Tier Security</strong><br>
-                        Protected access for Staff Operations and Dedicated Owner Analytics.
+                    <div class="portal-features">
+                        <div class="portal-feature-item">
+                            <div class="portal-feature-left">
+                                <div class="portal-feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                                        <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                                        <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                                        <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+                                        <circle cx="6.5" cy="6.5" r="1" fill="currentColor"></circle>
+                                        <circle cx="17.5" cy="6.5" r="1" fill="currentColor"></circle>
+                                        <circle cx="6.5" cy="17.5" r="1" fill="currentColor"></circle>
+                                        <circle cx="17.5" cy="17.5" r="1" fill="currentColor"></circle>
+                                    </svg>
+                                </div>
+                                <span class="portal-feature-label">Menu creation &amp; QR generation</span>
+                            </div>
+                            <div class="portal-feature-chk">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="portal-feature-item">
+                            <div class="portal-feature-left">
+                                <div class="portal-feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="6" y1="20" x2="6" y2="12"></line>
+                                        <line x1="12" y1="20" x2="12" y2="5"></line>
+                                        <line x1="18" y1="20" x2="18" y2="15"></line>
+                                    </svg>
+                                </div>
+                                <span class="portal-feature-label">Real-time order management</span>
+                            </div>
+                            <div class="portal-feature-chk">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="portal-feature-item">
+                            <div class="portal-feature-left">
+                                <div class="portal-feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                </div>
+                                <span class="portal-feature-label">Staff access &amp; role controls</span>
+                            </div>
+                            <div class="portal-feature-chk">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="portal-feature-item">
+                            <div class="portal-feature-left">
+                                <div class="portal-feature-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                                        <line x1="12" y1="20" x2="12" y2="8"></line>
+                                        <line x1="18" y1="20" x2="18" y2="4"></line>
+                                        <path d="M3 20h18"></path>
+                                    </svg>
+                                </div>
+                                <span class="portal-feature-label">Analytics &amp; performance insights</span>
+                            </div>
+                            <div class="portal-feature-chk">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -6,20 +6,20 @@
     <title>LAANCE SaaS | Live Google Sheets & WhatsApp Operations</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-black: #000000;
-            --bg-card: #121217;
-            --bg-card-alt: #181820;
+            --bg-black: #050507;
+            --bg-card: #14141f;
+            --bg-card-alt: #1a1a2a;
             --text-white: #ffffff;
-            --text-muted: #9e9ea7;
-            --accent-gold: #d4af37;
-            --accent-gold-bright: #f3ce49;
-            --accent-green: #22c55e;
+            --text-muted: #8b8b9e;
+            --accent-gold: #c9a86a;
+            --accent-gold-bright: #e6c98a;
+            --accent-green: #2ad4a0;
             --accent-green-dark: #15803d;
             --border-dark: rgba(255, 255, 255, 0.12);
-            --font-heading: 'Cinzel', serif;
+            --font-heading: 'Fraunces', serif;
             --font-sans: 'Plus Jakarta Sans', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
             --radius-pill: 9999px;
@@ -28,7 +28,7 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background-color: #000000;
+            background-color: var(--bg-black);
             color: #ffffff;
             font-family: var(--font-sans);
             min-height: 100vh;
@@ -84,13 +84,13 @@
         .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4); }
 
         @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 10px 35px rgba(255,122,24,0.6); }
-            100% { transform: scale(1.015); box-shadow: 0 14px 50px rgba(255,122,24,0.85); }
+            0% { transform: scale(1); box-shadow: 0 10px 35px rgba(201,168,106,0.5); }
+            100% { transform: scale(1.015); box-shadow: 0 14px 50px rgba(201,168,106,0.8); }
         }
         @keyframes newRowFlash {
-            0% { background: rgba(255,122,24,0.25); }
-            50% { background: rgba(255,122,24,0.08); }
-            100% { background: rgba(212,175,55,0.06); }
+            0% { background: rgba(201,168,106,0.2); }
+            50% { background: rgba(201,168,106,0.07); }
+            100% { background: rgba(201,168,106,0.03); }
         }
         .new-order-row {
             animation: newRowFlash 1.5s ease-out 3;
@@ -470,7 +470,7 @@
         </div>
 
         <!-- REAL-TIME INCOMING ORDER ALERT BANNER -->
-        <div id="liveOrderAlertBanner" style="display:none; background:linear-gradient(135deg, #ff7a18, #d4af37); color:#000; font-weight:900; padding:1.1rem 2rem; border-radius:14px; margin-bottom:1.8rem; box-shadow:0 10px 35px rgba(255,122,24,0.6); align-items:center; justify-content:space-between; animation:pulse 0.8s infinite alternate;">
+        <div id="liveOrderAlertBanner" style="display:none; background:linear-gradient(135deg, var(--accent-gold-bright), var(--accent-gold)); color:#000; font-weight:900; padding:1.1rem 2rem; border-radius:14px; margin-bottom:1.8rem; box-shadow:0 10px 35px rgba(201,168,106,0.5); align-items:center; justify-content:space-between; animation:pulse 0.8s infinite alternate;">
             <div style="display:flex; align-items:center; gap:1rem;">
                 <span style="font-size:2rem;">🚨</span>
                 <div>
@@ -605,7 +605,7 @@ Generating 12:00 AM Report Preview...
     <script>
         // 🔧 CONFIGURATION — Update these after Pusher account setup
         const MYQO_CONFIG = {
-            API_URL: localStorage.getItem('myqo_api_url') || 'https://myqo-backend.onrender.com',
+            API_URL: localStorage.getItem('myqo_api_url') || 'https://myqo-backend-x8eo.onrender.com',
             PUSHER_KEY: localStorage.getItem('myqo_pusher_key') || '6022aa162db803a7b9e7',
             PUSHER_CLUSTER: localStorage.getItem('myqo_pusher_cluster') || 'ap2'
         };
@@ -980,7 +980,110 @@ Generating 12:00 AM Report Preview...
                     <div class="center" style="font-size:11px; margin-top:15px;">
                         *** DISPATCHED VIA LAANCE QR KDS ***
                     </div>
-                </body>
+                
+    <!-- ====== DYNAMIC THEME & BRANDING SYNC ====== -->
+    <script>
+        function lightenHexColor(col, percent) {
+            try {
+                let num = parseInt(col.replace('#', ''), 16);
+                let r = (num >> 16) + Math.round(255 * (percent / 100));
+                let g = ((num >> 8) & 0x00FF) + Math.round(255 * (percent / 100));
+                let b = (num & 0x0000FF) + Math.round(255 * (percent / 100));
+                r = Math.min(255, Math.max(0, r));
+                g = Math.min(255, Math.max(0, g));
+                b = Math.min(255, Math.max(0, b));
+                return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            } catch(e) { return col; }
+        }
+
+        function applyLiveKitchenTheme() {
+            let design = null;
+            try { design = JSON.parse(localStorage.getItem('laance_menu_design')); } catch(e) {}
+
+            let rest = null;
+            try {
+                rest = JSON.parse(localStorage.getItem('laance_current_restaurant')) || JSON.parse(localStorage.getItem('laance_restaurant'));
+            } catch(e) {}
+
+            const accentColor = localStorage.getItem('laance_theme_color') || (design && design.accentColor) || '#caa633';
+            const brightColor = lightenHexColor(accentColor, 18);
+
+            // 1. Update CSS Variables
+            document.documentElement.style.setProperty('--accent-gold', accentColor);
+            document.documentElement.style.setProperty('--accent-gold-bright', brightColor);
+            document.documentElement.style.setProperty('--accent-primary', accentColor);
+
+            // 2. Apply dynamic colors to specific kitchen screen components
+            document.querySelectorAll('.btn-gold').forEach(btn => {
+                btn.style.background = `linear-gradient(135deg, ${brightColor}, ${accentColor})`;
+                btn.style.color = '#000000';
+            });
+
+            document.querySelectorAll('.pill-table').forEach(pill => {
+                pill.style.color = brightColor;
+                pill.style.borderColor = accentColor;
+            });
+
+            const waAvatar = document.querySelector('.phone-avatar');
+            if (waAvatar) {
+                waAvatar.style.background = `linear-gradient(135deg, ${brightColor}, ${accentColor})`;
+            }
+
+            const brandNameEl = document.querySelector('.nav-brand .brand');
+            if (brandNameEl) {
+                brandNameEl.style.color = accentColor;
+            }
+
+            // 3. Update restaurant identity
+            const rName = (rest && (rest.companyName || rest.name)) || (design && design.title) || 'La Lune French Bistro';
+            const rPhone = (rest && (rest.phone || rest.whatsapp)) || '+33 1 23 45 67 89';
+
+            const titleEl = document.querySelector('.page-title');
+            if (titleEl) {
+                titleEl.textContent = `${rName} — Live Kitchen Screen & Sheets Dispatcher`;
+            }
+
+            const waOwnerEl = document.getElementById('waOwnerName');
+            if (waOwnerEl) {
+                waOwnerEl.textContent = `LAANCE Bot ➜ ${rName} (${rPhone})`;
+            }
+
+            const statPhoneEl = document.getElementById('statWhatsApp');
+            if (statPhoneEl) {
+                statPhoneEl.textContent = rPhone;
+            }
+
+            const sheetSubEl = document.querySelector('.sheet-titles span');
+            if (sheetSubEl) {
+                const safe = rName.replace(/[^a-zA-Z0-9]/g, '_');
+                sheetSubEl.textContent = `📁 LAANCE_Cloud_Storage > 📊 ${safe}_Orders_Ledger.xlsx`;
+            }
+
+            console.log('🎨 Live Kitchen Theme Synced! Accent:', accentColor, 'Restaurant:', rName);
+        }
+
+        // Apply immediately
+        applyLiveKitchenTheme();
+        document.addEventListener('DOMContentLoaded', applyLiveKitchenTheme);
+
+        // Listen for live updates via BroadcastChannel (sub-millisecond instant sync across tabs)
+        try {
+            const themeChannel = new BroadcastChannel('laance_theme_channel');
+            themeChannel.onmessage = (event) => {
+                console.log('⚡ Received live theme update via BroadcastChannel:', event.data);
+                applyLiveKitchenTheme();
+            };
+        } catch(e) {}
+
+        // Listen for storage events (when changed in another tab)
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'laance_theme_color' || e.key === 'laance_menu_design' || e.key === 'laance_current_restaurant' || e.key === 'laance_restaurant') {
+                applyLiveKitchenTheme();
+            }
+        });
+    </script>
+
+</body>
                 </html>
             `);
             printWindow.document.close();
@@ -1049,7 +1152,7 @@ Generating 12:00 AM Report Preview...
                         <td>
                             <div style="display:flex; gap:0.4rem;">
                                 <button class="btn-sheet-action" onclick="printKOT('${o.orderId}')" title="Print Kitchen Order Ticket" style="background:#20202d;">🖨️ KOT</button>
-                                <button class="btn-sheet-action" onclick="toggleOrderStatus('${o.orderId}')" style="background:${isReady ? '#10b981' : '#ff7a18'}; color:#000; font-weight:800;">${isReady ? '✓ Ready' : 'Mark Ready'}</button>
+                                <button class="btn-sheet-action" onclick="toggleOrderStatus('${o.orderId}')" style="background:${isReady ? '#10b981' : '#c9a86a'}; color:#000; font-weight:800;">${isReady ? '✓ Ready' : 'Mark Ready'}</button>
                             </div>
                         </td>
                     </tr>
@@ -1167,5 +1270,108 @@ Generating 12:00 AM Report Preview...
             URL.revokeObjectURL(url);
         }
     </script>
+
+    <!-- ====== DYNAMIC THEME & BRANDING SYNC ====== -->
+    <script>
+        function lightenHexColor(col, percent) {
+            try {
+                let num = parseInt(col.replace('#', ''), 16);
+                let r = (num >> 16) + Math.round(255 * (percent / 100));
+                let g = ((num >> 8) & 0x00FF) + Math.round(255 * (percent / 100));
+                let b = (num & 0x0000FF) + Math.round(255 * (percent / 100));
+                r = Math.min(255, Math.max(0, r));
+                g = Math.min(255, Math.max(0, g));
+                b = Math.min(255, Math.max(0, b));
+                return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            } catch(e) { return col; }
+        }
+
+        function applyLiveKitchenTheme() {
+            let design = null;
+            try { design = JSON.parse(localStorage.getItem('laance_menu_design')); } catch(e) {}
+
+            let rest = null;
+            try {
+                rest = JSON.parse(localStorage.getItem('laance_current_restaurant')) || JSON.parse(localStorage.getItem('laance_restaurant'));
+            } catch(e) {}
+
+            const accentColor = localStorage.getItem('laance_theme_color') || (design && design.accentColor) || '#caa633';
+            const brightColor = lightenHexColor(accentColor, 18);
+
+            // 1. Update CSS Variables
+            document.documentElement.style.setProperty('--accent-gold', accentColor);
+            document.documentElement.style.setProperty('--accent-gold-bright', brightColor);
+            document.documentElement.style.setProperty('--accent-primary', accentColor);
+
+            // 2. Apply dynamic colors to specific kitchen screen components
+            document.querySelectorAll('.btn-gold').forEach(btn => {
+                btn.style.background = `linear-gradient(135deg, ${brightColor}, ${accentColor})`;
+                btn.style.color = '#000000';
+            });
+
+            document.querySelectorAll('.pill-table').forEach(pill => {
+                pill.style.color = brightColor;
+                pill.style.borderColor = accentColor;
+            });
+
+            const waAvatar = document.querySelector('.phone-avatar');
+            if (waAvatar) {
+                waAvatar.style.background = `linear-gradient(135deg, ${brightColor}, ${accentColor})`;
+            }
+
+            const brandNameEl = document.querySelector('.nav-brand .brand');
+            if (brandNameEl) {
+                brandNameEl.style.color = accentColor;
+            }
+
+            // 3. Update restaurant identity
+            const rName = (rest && (rest.companyName || rest.name)) || (design && design.title) || 'La Lune French Bistro';
+            const rPhone = (rest && (rest.phone || rest.whatsapp)) || '+33 1 23 45 67 89';
+
+            const titleEl = document.querySelector('.page-title');
+            if (titleEl) {
+                titleEl.textContent = `${rName} — Live Kitchen Screen & Sheets Dispatcher`;
+            }
+
+            const waOwnerEl = document.getElementById('waOwnerName');
+            if (waOwnerEl) {
+                waOwnerEl.textContent = `LAANCE Bot ➜ ${rName} (${rPhone})`;
+            }
+
+            const statPhoneEl = document.getElementById('statWhatsApp');
+            if (statPhoneEl) {
+                statPhoneEl.textContent = rPhone;
+            }
+
+            const sheetSubEl = document.querySelector('.sheet-titles span');
+            if (sheetSubEl) {
+                const safe = rName.replace(/[^a-zA-Z0-9]/g, '_');
+                sheetSubEl.textContent = `📁 LAANCE_Cloud_Storage > 📊 ${safe}_Orders_Ledger.xlsx`;
+            }
+
+            console.log('🎨 Live Kitchen Theme Synced! Accent:', accentColor, 'Restaurant:', rName);
+        }
+
+        // Apply immediately
+        applyLiveKitchenTheme();
+        document.addEventListener('DOMContentLoaded', applyLiveKitchenTheme);
+
+        // Listen for live updates via BroadcastChannel (sub-millisecond instant sync across tabs)
+        try {
+            const themeChannel = new BroadcastChannel('laance_theme_channel');
+            themeChannel.onmessage = (event) => {
+                console.log('⚡ Received live theme update via BroadcastChannel:', event.data);
+                applyLiveKitchenTheme();
+            };
+        } catch(e) {}
+
+        // Listen for storage events (when changed in another tab)
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'laance_theme_color' || e.key === 'laance_menu_design' || e.key === 'laance_current_restaurant' || e.key === 'laance_restaurant') {
+                applyLiveKitchenTheme();
+            }
+        });
+    </script>
+
 </body>
 </html>
